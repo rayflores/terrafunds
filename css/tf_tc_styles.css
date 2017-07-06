@@ -1,0 +1,86 @@
+table.tf_calc_table {
+    width: 100%;
+}
+table.tf-tc-results {
+    width: 100%;
+}
+.tf_calc_main {
+	margin:0 auto;
+	width:60%;
+}
+.tf_calc_main tr td {
+	padding: 10px!important;
+}
+.tf_calc_main tr td label{
+	font-weight: inherit;
+}
+.tf_calc_main tr td.slider-td .tf-slider {
+	padding: 10px 20px!important;
+}
+.responsive td, .responsive th, .responsive {
+		border:none!important;
+	}
+
+/* Large Devices, Wide Screens */
+@media only screen and (max-width : 1200px) {
+	.responsive td, .responsive th, .responsive {
+		border:none!important;
+	}
+}
+
+/* Medium Devices, Desktops */
+@media only screen and (max-width : 992px) {
+	.responsive td, .responsive th, .responsive {
+		border:none!important;
+	}
+}
+
+/* Small Devices, Tablets */
+@media only screen and (max-width : 768px) {
+	.responsive td, .responsive th, .responsive {
+		border:none!important;
+		font-size:16px;
+	}
+	.tf_calc_main {
+		margin:0 auto;
+		width:80%;
+	}
+	.tf_calc_table td {
+		display:block;
+		width: 100%;
+	}
+    .responsive
+}
+
+/* Extra Small Devices, Phones */ 
+@media only screen and (max-width : 480px) {
+	.tf_calc_main {
+		margin:0 auto;
+		width:95%;
+	}
+	.responsive td, .responsive th, .responsive {
+		border:none!important;
+	}
+	.tf_calc_table td {
+		display:block;
+		width: 100%;
+	}
+	.tf_calc_main {
+		margin:0 auto;
+		width:100%;
+	}
+	.tf_calc_main tr td input {
+		width:100%;
+		font-size:20px;
+	}
+}
+
+/* Custom, iPhone Retina */ 
+@media only screen and (max-width : 320px) {
+	.responsive td, .responsive th, .responsive {
+		border:none!important;
+	}
+	.tf_calc_table td {
+		display:block;
+	}
+}
