@@ -8,7 +8,7 @@ table.tf-tc-results {
 	margin:0 auto;
 	width:60%;
 }
-.tf_calc_main tr td {
+.tf_calc_main tr td, .tf-tc-results tr td.h2.size-color {
 	padding: 10px!important;
 }
 .tf_calc_main tr td label{
@@ -20,6 +20,39 @@ table.tf-tc-results {
 .responsive td, .responsive th, .responsive {
 		border:none!important;
 	}
+.table-responsive td, .table-responsive th, .table-responsive {
+	border:none!important;
+}
+.tf-tc-results tr td {
+    padding: 10px 0px 0px 10px!important;
+}
+.tf_calc_main tr td.noPad {
+	padding: 0px 0px 0px 10px!important;
+}
+.tf_calc_main tr td.noPad label{
+	margin-bottom: 0px!important;
+}
+/* slider button color and radius */
+.tf-slider span.ui-slider-handle.ui-state-default.ui-corner-all {
+    background: #F7690A;
+    border-radius: 50%;
+}
+/* size of dot */
+.tf-slider span.ui-slider-handle {
+    width: 1.5em;
+    height: 1.5em;
+	top: -.4em;
+}
+tr.total-results td.top-border {
+	border-top:1px solid #222!important;
+}
+tr.allBold td{
+	font-weight:900;
+}
+/* Headings can be adjusted using this declaration */
+td.h2.size-color {
+	
+}
 
 /* Large Devices, Wide Screens */
 @media only screen and (max-width : 1200px) {
