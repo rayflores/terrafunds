@@ -31,6 +31,7 @@ class TF_Tax_Calc {
 		// Set our title
 		$this->title = __( 'Tax Calc', 'wc-catc' );
 		add_shortcode('terra_calc', array($this, 'tf_tc_add_shortcode') );
+		
 		add_action('wp_enqueue_scripts', array($this, 'tf_tc_enqueue_scripts') );
 
 	}
@@ -68,7 +69,7 @@ class TF_Tax_Calc {
 			<table class="table-responsive tf_calc_table">
 				<tbody>
 					<tr>
-						<td colspan="2"class="h2 size-color">Calculate Your Tax Savings</td>
+						<td colspan="2"class="h2 size-color"><?php echo isset($options['tf_tc_options_calculator_title']) ? $options['tf_tc_options_calculator_title'] : 'Calculator Inputs'; ?></td>
 					</tr>
 					<tr>
 						<td>
@@ -159,10 +160,11 @@ class TF_Tax_Calc {
 					</tr>
 				</tbody>
 			</table>
+		<div class="extra">
 			<table class="tf-tc-results table-responsive">
 				<tbody>
 					<tr>
-						<td colspan="4" class="h2 size-color">Your estimated tax savings</td>
+						<td colspan="4" class="h2 size-color"><?php echo isset($options['tf_tc_options_results_title']) ? $options['tf_tc_options_results_title'] : 'Total Tax Savings'; ?></td>
 					</tr>
 					<tr>
 						<td></td>
@@ -216,7 +218,7 @@ class TF_Tax_Calc {
 					</tr>
 				</tbody>
 			</table>
-
+		</div>
 			<input type="hidden" data-cell="C48" data-formula='<?php echo $options['tf_tc_options_C48_formula']; ?>' />
 			<input type="hidden" data-cell="D48" data-formula='<?php echo $options['tf_tc_options_D48_formula']; ?>' />
 			<input type="hidden" data-cell="E48" data-formula='<?php echo $options['tf_tc_options_E48_formula']; ?>' />
@@ -456,18 +458,26 @@ class TF_Tax_Calc {
 	 * @since 0.1.0
 	 */
 	public function hooks() {
+		global $my_admin_page;
 		add_action( 'admin_init', array( $this, 'init' ) );
 		add_action( 'admin_menu', array( $this, 'add_options_page' ) );
 		// enqueue admin scripts/styles
+		
 		add_action( 'admin_enqueue_scripts', array($this, 'tf_tc_admin_enqueue_scripts') );
 	}
 	public function tf_tc_admin_enqueue_scripts(){
+		global $my_admin_page;
+
 		$options = get_option($this->key);
+		
+		
+		if ( "toplevel_page_tf_tc_options" === $my_admin_page) {
 		wp_enqueue_script( 'jquery' );
 		wp_enqueue_script( 'tf-tc-numeral', plugins_url('js/js/numeral.min.js', __FILE__), array('jquery'), false, true );
 		wp_enqueue_script( 'tf-tc-calx', plugins_url('js/jquery-calx-2.2.6.js', __FILE__), array('jquery'), false, true );
 		wp_enqueue_script( 'tf-cust-script', plugins_url('js/tf_tc_admin_script.js', __FILE__), array('jquery'), false, true );
 		wp_localize_script( 'tf-cust-script', 'tf_options', $options );
+		}
 	}
 	/**
 	 * Register our setting to WP
@@ -512,7 +522,8 @@ class TF_Tax_Calc {
 	 * @since 0.1.0
 	 */
 	public function add_options_page() {
-		$this->options_page = add_menu_page( $this->title, $this->title, 'manage_options', $this->key, array( $this, 'admin_page_display' ) );
+		global $my_admin_page;
+		$my_admin_page = add_menu_page( $this->title, $this->title, 'manage_options', $this->key, array( $this, 'admin_page_display' ) );
 	}
 	/**
 	 * Admin page markup.
@@ -535,14 +546,25 @@ class TF_Tax_Calc {
 		</style>
 		<div class="wrap tf_tc-options-page <?php echo $this->key; ?>">
 			<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
+
 				<form action='options.php' method='post' class="tf_admin_form">
 					<?php settings_fields( $this->key ); ?>
 					<?php do_settings_sections( $this->key ); ?>
-					
+					<div>
+						<label>Label For Calculator Inputs<br/>
+							<input type="text" name="tf_tc_options[tf_tc_options_calculator_title]" value="<?php echo  isset($options['tf_tc_options_calculator_title']) ? $options['tf_tc_options_calculator_title'] : 'Calculator Inputs'; ?>"/>
+						</label>
+					</div>
+					<div>
+						<label>Label For Results Inputs<br/>
+							<input type="text" name="tf_tc_options[tf_tc_options_results_title]" value="<?php echo isset($options['tf_tc_options_results_title']) ? $options['tf_tc_options_results_title'] : 'Total Tax Savings'; ?>"/>
+						</label>
+					</div>
 					<table class="form-table tax-table-1"style="width:40%">
 					<tr>
 						<th scope="row">Front-end labels for steps</th>
-						</tr>
+					</tr>
+						
 						<tr colspan="2">
 							<td>
 								<label>B8:  Step 1 Label</label>
