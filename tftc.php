@@ -465,18 +465,20 @@ class TF_Tax_Calc {
 		
 		add_action( 'admin_enqueue_scripts', array($this, 'tf_tc_admin_enqueue_scripts') );
 	}
-	public function tf_tc_admin_enqueue_scripts(){
-		global $my_admin_page;
+	public function tf_tc_admin_enqueue_scripts($hook){
+		global $my_admin_page, $pagenow;
 
 		$options = get_option($this->key);
 		
 		
-		if ( "toplevel_page_tf_tc_options" === $my_admin_page) {
-		wp_enqueue_script( 'jquery' );
-		wp_enqueue_script( 'tf-tc-numeral', plugins_url('js/js/numeral.min.js', __FILE__), array('jquery'), false, true );
-		wp_enqueue_script( 'tf-tc-calx', plugins_url('js/jquery-calx-2.2.6.js', __FILE__), array('jquery'), false, true );
-		wp_enqueue_script( 'tf-cust-script', plugins_url('js/tf_tc_admin_script.js', __FILE__), array('jquery'), false, true );
-		wp_localize_script( 'tf-cust-script', 'tf_options', $options );
+		if ( $hook != "toplevel_page_tf_tc_options" ) {
+			return;
+		} else {
+			wp_enqueue_script( 'jquery' );
+			wp_enqueue_script( 'tf-tc-numeral', plugins_url('js/js/numeral.min.js', __FILE__), array('jquery'), false, true );
+			wp_enqueue_script( 'tf-tc-calx', plugins_url('js/jquery-calx-2.2.6.js', __FILE__), array('jquery'), false, true );
+			wp_enqueue_script( 'tf-cust-script', plugins_url('js/tf_tc_admin_script.js', __FILE__), array('jquery'), false, true );
+			wp_localize_script( 'tf-cust-script', 'tf_options', $options );
 		}
 	}
 	/**
