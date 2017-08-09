@@ -49,9 +49,12 @@ jQuery(document).ready(function($){
 				}	
 				tfChartOne.update();
 			}
-			$(document).on('keyup','.d10, .d12, .d14, .d22', function(e){
+			$(document).on('keyup change','.d10, .d12, .d14, .d22', function(e){
 				addData();
 				$("#tfChartOne").mouseover();
+			});
+			$( "#tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5" ).on('slidechange', function( event, ui ){
+				addData();
 			});
 			Chart.Tooltip.positioners.outer = function(elements) {
 				if (!elements.length) {
@@ -195,6 +198,9 @@ jQuery(document).ready(function($){
 				addData2();
 				$("#tfChartTwo").mouseover();
 			});
+			$( "#tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5" ).on('slidechange', function( event, ui ){
+				addData2();
+			});
 
 // END SECOND CHART
 // THIRD CHART
@@ -259,6 +265,9 @@ jQuery(document).ready(function($){
 			$(document).on('keyup','.d10, .d12, .d14, .d22', function(e){
 				addData3();
 				$("#tfChartThree").mouseover();
+			});
+			$( "#tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5" ).on('slidechange', function( event, ui ){
+				addData3();
 			});
 			
 });
