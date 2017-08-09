@@ -55,6 +55,8 @@ class TF_Tax_Calc {
 		wp_enqueue_script( 'tf-tc-calx', array('jquery') );
 		wp_enqueue_script( 'tf-cust-script' );
 		wp_enqueue_script( 'tf-touchpunch', plugins_url( 'js/jquery.ui.touch-punch.min.js',__FILE__ ), array('jquery','jquery-ui-slider'), false , true );
+		wp_enqueue_script('chartjs-js', '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.js');
+		wp_enqueue_script('tftc-chartsjs', plugins_url('js/tf_tc_charts_config.js',__FILE__) );
 		
 	}
 	public function tf_tc_add_shortcode(){
@@ -175,9 +177,12 @@ class TF_Tax_Calc {
 					</tr>
 					<tr>
 						<td class="noPad">Investment</td>
-						<td class="text-center noPad"><label data-cell="C47" data-formula='<?php echo $options['tf_tc_options_C47_formula']; ?>' data-format="$0,0"></label></td>
+						<td class="text-center noPad"><label class="C47" data-cell="C47" data-formula='<?php echo $options['tf_tc_options_C47_formula']; ?>' data-format="$0,0"></label></td>
 						<td class="text-center noPad"><label data-cell="D47" data-formula='<?php echo $options['tf_tc_options_D47_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center noPad"><label data-cell="E47" data-formula='<?php echo $options['tf_tc_options_E47_formula']; ?>' data-format="$0,0"></label></td>
+						<td class="text-center noPad"><label class="E47" data-cell="E47" data-formula='<?php echo $options['tf_tc_options_E47_formula']; ?>' data-format="$0,0"></label></td>
+					</tr>
+					<tr>
+						<td colspan="4" class="noPad"><hr class="sep"/></td>
 					</tr>
 					<tr>
 						<td>Tax Rate</td>
@@ -186,10 +191,16 @@ class TF_Tax_Calc {
 						<td class="text-center"><label data-cell="E49" data-formula='<?php echo $options['tf_tc_options_E49_formula']; ?>' data-format="0.00%"></label></td>
 					</tr>
 					<tr>
+						<td colspan="4" class="noPad"><hr class="sep"/></td>
+					</tr>
+					<tr>
 						<td>Tax savings</td>
 						<td class="text-center"><label data-cell="C50" data-formula='<?php echo $options['tf_tc_options_C50_formula']; ?>' data-format="$0,0"></label></td>
 						<td class="text-center"><label data-cell="D50" data-formula='<?php echo $options['tf_tc_options_D50_formula']; ?>' data-format="$0,0"></label></td>
 						<td class="text-center"><label data-cell="E50" data-formula='<?php echo $options['tf_tc_options_E50_formula']; ?>' data-format="$0,0"></label></td>
+					</tr>
+					<tr>
+						<td colspan="4" class="noPad"><hr class="sep"/></td>
 					</tr>
 					<tr>
 						<td>ITC savings</td>
@@ -198,10 +209,16 @@ class TF_Tax_Calc {
 						<td class="text-center"><label data-cell="E52" data-formula='<?php echo $options['tf_tc_options_E52_formula']; ?>' data-format="$0,0"></label></td>
 					</tr>
 					<tr>
+						<td colspan="4" class="noPad"><hr class="sep"/></td>
+					</tr>
+					<tr>
 						<td><label data-cell="B53" data-formula='<?php echo $options['tf_tc_options_B53_formula']; ?>'></label></td>
 						<td class="text-center"><label data-cell="C53" data-formula='<?php echo $options['tf_tc_options_C53_formula']; ?>' data-format="$0,0"></label></td>
 						<td class="text-center"><label data-cell="D53" data-formula='<?php echo $options['tf_tc_options_D53_formula']; ?>' data-format="$0,0"></label></td>
 						<td class="text-center"><label data-cell="E53" data-formula='<?php echo $options['tf_tc_options_E53_formula']; ?>' data-format="$0,0"></label></td> 
+					</tr>
+					<tr>
+						<td colspan="4" class="noPad"><hr class="sep"/></td>
 					</tr>
 					<tr>
 						<td><label data-cell="B54" data-formula='<?php echo $options['tf_tc_options_B54_formula']; ?>'></label></td>
@@ -209,11 +226,14 @@ class TF_Tax_Calc {
 						<td class="hr text-center"><label data-cell="D54" data-formula='<?php echo $options['tf_tc_options_D54_formula']; ?>' data-format="($0,0)"></label></td>
 						<td class="hr text-center"><label data-cell="E54" data-formula='<?php echo $options['tf_tc_options_E54_formula']; ?>' data-format="($0,0)"></label></td>
 					</tr>
+					<tr>
+						<td colspan="4" class="noPad"><hr class="sep-3"/></td>
+					</tr>
 					<tr class="total-results allBold">
 						<td valign="top">Total tax savings</td>
-						<td class="text-center top-border"><label data-cell="C55" data-formula='<?php echo $options['tf_tc_options_C55_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center top-border"><label data-cell="D55" data-formula='<?php echo $options['tf_tc_options_D55_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center top-border"><label data-cell="E55" data-formula='<?php echo $options['tf_tc_options_E55_formula']; ?>' data-format="$0,0"></label></td>
+						<td class="text-center"><label class="C55" data-cell="C55" data-formula='<?php echo $options['tf_tc_options_C55_formula']; ?>' data-format="$0,0" value=""></label></td>
+						<td class="text-center"><label class="D55" data-cell="D55" data-formula='<?php echo $options['tf_tc_options_D55_formula']; ?>' data-format="$0,0"></label></td>
+						<td class="text-center"><label class="E55" data-cell="E55" data-formula='<?php echo $options['tf_tc_options_E55_formula']; ?>' data-format="$0,0"></label></td>
 						
 					</tr>
 				</tbody>
@@ -429,6 +449,12 @@ class TF_Tax_Calc {
 			
 		</table>
 		
+		<div class="charts" style="clear:both;">
+			<canvas id="tfChartOne" width="400" height="400" style="float:left;"></canvas>
+			<canvas id="tfChartTwo" width="400" height="400" style="float:left;"></canvas>
+			<canvas id="tfChartThree" width="400" height="400" style="float:left;"></canvas>
+		</div>
+
 		</form>
 	<?php } else {  ?>
 		<div class="tf-calc-warning">

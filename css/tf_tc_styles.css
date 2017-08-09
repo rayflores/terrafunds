@@ -1,12 +1,27 @@
+hr.sep {
+	margin:5% 0 2% 0!important;
+	border-color:#999!important;
+}
+hr.sep-3 {
+	border:1px solid #222;
+}
+.extra {
+	padding-left:5%;
+	width: 49%;
+	float:left;
+}
 table.tf_calc_table {
-    width: 100%;
+    width: 49%;
+	float: left;
 }
 table.tf-tc-results {
     width: 100%;
+	float:left;
+	font-weight:bold;
 }
 .tf_calc_main {
 	margin:0 auto;
-	width:60%;
+	width:90%;
 }
 .tf_calc_main tr td, .tf-tc-results tr td.h2.size-color {
 	padding: 10px!important;
@@ -25,6 +40,8 @@ table.tf-tc-results {
 }
 .tf-tc-results tr td {
     padding: 10px 0px 0px 10px!important;
+    background-color: #b2b2b2;
+	text-align: left;
 }
 .tf_calc_main tr td.noPad {
 	padding: 0px 0px 0px 10px!important;
@@ -51,13 +68,22 @@ tr.allBold td{
 }
 /* Headings can be adjusted using this declaration */
 td.h2.size-color {
-	
+	font-size:20px;
+	color:#F7690A;
 }
 
 /* Large Devices, Wide Screens */
 @media only screen and (max-width : 1200px) {
 	.responsive td, .responsive th, .responsive {
 		border:none!important;
+	}
+.tf_calc_main tr td input {
+		width:100%;
+		font-size:16px;
+	}
+table.tf-tc-results {
+    width: 100%;
+	font-size:16px;
 	}
 }
 
@@ -66,13 +92,20 @@ td.h2.size-color {
 	.responsive td, .responsive th, .responsive {
 		border:none!important;
 	}
+table.tf-tc-results {
+    width: 100%;
+	font-size:16px;
+	}
+.tf_calc_main tr td input {
+		width:100%;
+		font-size:14px;
+	}
 }
 
 /* Small Devices, Tablets */
 @media only screen and (max-width : 768px) {
 	.responsive td, .responsive th, .responsive {
 		border:none!important;
-		font-size:16px;
 	}
 	.tf_calc_main {
 		margin:0 auto;
@@ -82,7 +115,18 @@ td.h2.size-color {
 		display:block;
 		width: 100%;
 	}
-    .responsive
+	.tf_calc_main tr td input {
+		width:100%;
+		font-size:16px;
+	}
+    /* Headings can be adjusted using this declaration */
+	td.h2.size-color {
+		font-size:20px;
+	}
+table.tf-tc-results {
+    width: 100%;
+	font-size:14px;
+	}
 }
 
 /* Extra Small Devices, Phones */ 
@@ -104,6 +148,14 @@ td.h2.size-color {
 	}
 	.tf_calc_main tr td input {
 		width:100%;
+		font-size:16px;
+	}
+table.tf-tc-results {
+    width: 100%;
+	font-size:14px;
+	}
+	/* Headings can be adjusted using this declaration */
+	td.h2.size-color {
 		font-size:20px;
 	}
 }
@@ -113,7 +165,25 @@ td.h2.size-color {
 	.responsive td, .responsive th, .responsive {
 		border:none!important;
 	}
+	.tf_calc_main {
+		margin:0 auto;
+		width:100%;
+	font-size:16px;
+	}
+td.h2.size-color {
+	font-size:20px;
+	color:#F7690A;
+	}
 	.tf_calc_table td {
 		display:block;
+	font-size:14px;
+	}
+	.tf_calc_main tr td input {
+		width:100%;
+		font-size:14px;
+	}
+table.tf-tc-results {
+    width: 100%;
+	font-size:14px;
 	}
 }
