@@ -38,13 +38,29 @@ class TF_Tax_Calc {
 
 	public function tf_tc_enqueue_scripts(){
 		$options = get_option($this->key);
-		
+		$cash_outlay_bg = $options['tf_tc_options_cash_outlay_bg'];
+		$tax_savings_bg = $options['tf_tc_options_tax_savings_bg'];
+		$title_color = $options['tf_tc_options_chart_title_color'];
+		$title_style = $options['tf_tc_options_chart_title_style'];
+		$title_font = $options['tf_tc_options_chart_title_font'];
+		$title_size = $options['tf_tc_options_chart_title_size'];
+		$tooltip_bg = $options['tf_tc_options_tooltip_bg'];
+		$bgs = array(
+			'cash_outlay_bg' => $cash_outlay_bg,
+			'tax_savings_bg' => $tax_savings_bg,
+			'title_color' => $title_color,
+			'title_style' => $title_style,
+			'title_font' => $title_font,
+			'title_size' => $title_size,
+			'tooltip_bg' => $tooltip_bg,
+		);
 		wp_register_script( 'tf-tc-numeral', plugins_url('js/js/numeral.min.js', __FILE__) );
 		wp_register_script( 'tf-tc-calx', plugins_url('js/jquery-calx-2.2.6.js', __FILE__) );
 		wp_register_style( 'tf-slider-styles', '//ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css');
 		wp_register_style( 'tf-cust-styles', plugins_url('css/tf_tc_styles.css', __FILE__) );
 		wp_register_script( 'tf-cust-script', plugins_url('js/tf_tc_script.js', __FILE__) );
-		//wp_localize_script( 'tf-cust-script', 'tf_options', $options );
+		wp_register_script( 'tf-curform', plugins_url('js/js/jquery.formatCurrency.js',__FILE__) );
+		wp_localize_script( 'tf-cust-script', 'tf_options', $bgs );
 	
 
 		wp_enqueue_style( 'tf-slider-styles' );
@@ -57,7 +73,7 @@ class TF_Tax_Calc {
 		wp_enqueue_script( 'tf-touchpunch', plugins_url( 'js/jquery.ui.touch-punch.min.js',__FILE__ ), array('jquery','jquery-ui-slider'), false , true );
 		wp_enqueue_script('chartjs-js', '//cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.js');
 		wp_enqueue_script('tftc-chartsjs', plugins_url('js/tf_tc_charts_config.js',__FILE__) );
-		
+		wp_enqueue_script( 'tf-curform', array('jquery') );
 	}
 	public function tf_tc_add_shortcode(){
 		
@@ -130,7 +146,7 @@ class TF_Tax_Calc {
 							<?php echo $options['tf_tc_options_step_5_label']; ?>
 						</td>
 						<td>
-							<select data-cell="D18" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;">
+							<select class="d18" data-cell="D18" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;">
 								<option value="NO" selected="selected">No</option>
 								<option value="YES - Contribute to RRSP">Yes - Contribute to RRSP</option>
 								<option value="YES - Donate">Yes - Donate</option>
@@ -142,7 +158,7 @@ class TF_Tax_Calc {
 							<?php echo $options['tf_tc_options_step_6_label']; ?>
 						</td>
 						<td>
-							<select data-cell="D20" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;">
+							<select data-cell="D20" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;" class="d20">
 								<option value="NO">No</option>
 								<option value="YES">Yes</option>
 							</select>	
@@ -449,10 +465,10 @@ class TF_Tax_Calc {
 			
 		</table>
 		
-		<div class="charts" style="clear:both;">
-			<canvas id="tfChartOne" width="400" height="400" style="float:left;"></canvas>
-			<canvas id="tfChartTwo" width="400" height="400" style="float:left;"></canvas>
-			<canvas id="tfChartThree" width="400" height="400" style="float:left;"></canvas>
+		<div class="charts" style="clear:both;text-align:center">
+			<canvas id="tfChartOne" width="350" height="350" style="display:inline-block;"></canvas>
+			<canvas id="tfChartTwo" width="350" height="350" style="display:inline-block;"></canvas>
+			<canvas id="tfChartThree" width="350" height="350" style="display:inline-block;"></canvas>
 		</div>
 
 		</form>
@@ -496,6 +512,8 @@ class TF_Tax_Calc {
 
 		$options = get_option($this->key);
 		
+		// Css rules for Color Picker
+			wp_enqueue_style( 'wp-color-picker' );
 		
 		if ( $hook != "toplevel_page_tf_tc_options" ) {
 			return;
@@ -503,8 +521,9 @@ class TF_Tax_Calc {
 			wp_enqueue_script( 'jquery' );
 			wp_enqueue_script( 'tf-tc-numeral', plugins_url('js/js/numeral.min.js', __FILE__), array('jquery'), false, true );
 			wp_enqueue_script( 'tf-tc-calx', plugins_url('js/jquery-calx-2.2.6.js', __FILE__), array('jquery'), false, true );
-			wp_enqueue_script( 'tf-cust-script', plugins_url('js/tf_tc_admin_script.js', __FILE__), array('jquery'), false, true );
-			wp_localize_script( 'tf-cust-script', 'tf_options', $options );
+			wp_enqueue_script( 'tf-cust-script', plugins_url('js/tf_tc_admin_script.js', __FILE__), array('jquery', 'wp-color-picker'), false, true );
+			
+			
 		}
 	}
 	/**
@@ -588,6 +607,37 @@ class TF_Tax_Calc {
 							<input type="text" name="tf_tc_options[tf_tc_options_results_title]" value="<?php echo isset($options['tf_tc_options_results_title']) ? $options['tf_tc_options_results_title'] : 'Total Tax Savings'; ?>"/>
 						</label>
 					</div>
+					<div>
+						<label>Color for Cash Outlay Background<br/>
+							<input type="text" class="tf-color-picker" data-alpha="true" data-default-color="rgba(18,171,66,1)" name="tf_tc_options[tf_tc_options_cash_outlay_bg]" value="<?php echo isset($options['tf_tc_options_cash_outlay_bg']) ? $options['tf_tc_options_cash_outlay_bg'] : 'rgba(18,171,66,1)'; ?>"/>
+						</label>
+					</div>
+					<div>
+						<label>Color for Tax Savings Background<br/>
+							<input type="text"  class="tf-color-picker" data-alpha="true" data-default-color="rgba(76,76,76,1)" name="tf_tc_options[tf_tc_options_tax_savings_bg]" value="<?php echo isset($options['tf_tc_options_tax_savings_bg']) ? $options['tf_tc_options_tax_savings_bg'] : 'rgba(76,76,76,1)'; ?>"/>
+						</label>
+					</div>
+					<div>
+						<label>Chart Title Size<br/>
+							<input type="text" name="tf_tc_options[tf_tc_options_chart_title_size]" value="<?php echo isset($options['tf_tc_options_chart_title_size']) ? $options['tf_tc_options_chart_title_size'] : '14'; ?>"/>
+						</label>
+					<br/>
+						<label>Chart Title Style<br/>
+							<input type="text" name="tf_tc_options[tf_tc_options_chart_title_style]" value="<?php echo isset($options['tf_tc_options_chart_title_style']) ? $options['tf_tc_options_chart_title_style'] : 'bold'; ?>"/>
+						</label>
+					<br/>
+						<label>Chart Title Font<br/>
+							<input type="text" name="tf_tc_options[tf_tc_options_chart_title_font]" value="<?php echo isset($options['tf_tc_options_chart_title_font']) ? $options['tf_tc_options_chart_title_font'] : 'Lato'; ?>"/>
+						</label>
+					<br/>
+						<label>Chart Title Color<br/>
+							<input type="text" class="tf-color-picker" data-alpha="true" data-default-color="rgba(34,34,34,1)" name="tf_tc_options[tf_tc_options_chart_title_color]" value="<?php echo isset($options['tf_tc_options_chart_title_font']) ? $options['tf_tc_options_chart_title_color'] : 'rgba(34,34,34,1)'; ?>"/>
+						</label>
+					<br/>
+						<label>Tooltip Background<br/>
+							<input type="text" class="tf-color-picker" data-alpha="true" data-default-color="rgba(247,105,10,1)" name="tf_tc_options[tf_tc_options_tooltip_bg]" value="<?php echo isset($options['tf_tc_options_tooltip_bg']) ? $options['tf_tc_options_tooltip_bg'] : 'rgba(247,105,10,1)'; ?>"/>
+						</label>
+					</div>
 					<table class="form-table tax-table-1"style="width:40%">
 					<tr>
 						<th scope="row">Front-end labels for steps</th>
@@ -649,7 +699,7 @@ class TF_Tax_Calc {
 								<input type="text" name="tf_tc_options[tf_tc_options_step_5_label]" value="<?php echo isset($options['tf_tc_options_step_5_label']) ? $options['tf_tc_options_step_5_label'] : 'Step 5: Optional: Contribute Terra investment to RRSP or Donate'; ?>"/>
 							</td>
 							<td><label>D18</label>
-								<select data-cell="D18" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;">
+								<select class="d18" data-cell="D18" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;">
 									<option value="NO"  selected="selected">No</option>
 									<option value="YES - Contribute to RRSP">Yes - Contribute to RRSP</option>
 									<option value="YES - Donate">Yes - Donate</option>

@@ -17,7 +17,6 @@ table.tf_calc_table {
 table.tf-tc-results {
     width: 100%;
 	float:left;
-	font-weight:bold;
 }
 .tf_calc_main {
 	margin:0 auto;
