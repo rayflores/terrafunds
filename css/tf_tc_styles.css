@@ -82,7 +82,7 @@ td.h2.size-color {
 	}
 table.tf-tc-results {
     width: 100%;
-	font-size:16px;
+	font-size:18px;
 	}
 }
 
@@ -93,7 +93,7 @@ table.tf-tc-results {
 	}
 table.tf-tc-results {
     width: 100%;
-	font-size:16px;
+	font-size:18px;
 	}
 .tf_calc_main tr td input {
 		width:100%;
@@ -102,7 +102,7 @@ table.tf-tc-results {
 }
 
 /* Small Devices, Tablets */
-@media only screen and (max-width : 768px) {
+@media only screen and (max-width : 767px) {
 	.responsive td, .responsive th, .responsive {
 		border:none!important;
 	}
@@ -122,9 +122,17 @@ table.tf-tc-results {
 	td.h2.size-color {
 		font-size:20px;
 	}
-table.tf-tc-results {
-    width: 100%;
-	font-size:14px;
+	table.tf_calc_table {
+		width: 100%;
+		float: left;
+	}
+	.extra {
+		width:100%;
+		padding-left:0;
+	}
+	table.tf-tc-results {
+		width: 100%;
+		font-size:18px;
 	}
 }
 
@@ -151,7 +159,7 @@ table.tf-tc-results {
 	}
 table.tf-tc-results {
     width: 100%;
-	font-size:14px;
+	font-size:18px;
 	}
 	/* Headings can be adjusted using this declaration */
 	td.h2.size-color {
@@ -183,6 +191,6 @@ td.h2.size-color {
 	}
 table.tf-tc-results {
     width: 100%;
-	font-size:14px;
+	font-size:16px;
 	}
 }
