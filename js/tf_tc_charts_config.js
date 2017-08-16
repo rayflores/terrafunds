@@ -83,6 +83,7 @@ jQuery(document).ready(function($){
 							tooltip._options.cornerRadius = tooltip._options.bodyFontSize*0.40;
 							tooltip._options.borderWidth = 1;
 							tooltip._options.borderColor = tooltip_bg;
+							tooltip._options.bodyFontFamily = title_font;
 														
 							tooltip.update();
 							
