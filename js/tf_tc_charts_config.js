@@ -19,8 +19,8 @@ jQuery(document).ready(function($){
 				for (i = 0, len = elements.length; i < len; ++i) {
 					var el = elements[i];
 					if (el && el.hasValue()) {
-						var elPosX = el._view.x+0.90*el._view.outerRadius*Math.cos((el._view.endAngle-el._view.startAngle)/3+el._view.startAngle);
-						var elPosY = el._view.y+0.60*el._view.outerRadius*Math.sin((el._view.endAngle-el._view.startAngle)/3+el._view.startAngle);
+						var elPosX = el._view.x+0.95*el._view.outerRadius*Math.cos((el._view.endAngle-el._view.startAngle)/3+el._view.startAngle);
+						var elPosY = el._view.y+0.45*el._view.outerRadius*Math.sin((el._view.endAngle-el._view.startAngle)/3+el._view.startAngle);
 						if (x < elPosX) {
 							x = elPosX;
 						}
