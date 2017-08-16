@@ -1,3 +1,7 @@
+/* Charts */
+.charts {
+	padding:5% 0 0;
+}
 hr.sep {
 	margin:5% 0 2% 0!important;
 	border-color:#999!important;
@@ -47,6 +51,10 @@ table.tf-tc-results {
 }
 .tf_calc_main tr td.noPad label{
 	margin-bottom: 0px!important;
+	font-weight:bold;
+}
+.tf_calc_main tr td.noPad {
+	font-weight:bold;
 }
 /* slider button color and radius */
 .tf-slider span.ui-slider-handle.ui-state-default.ui-corner-all {

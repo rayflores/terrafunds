@@ -77,11 +77,13 @@ jQuery(document).ready(function($){
 							tooltip._options.displayColors = false;
 							tooltip._options.backgroundColor = tooltip_bg;
 							tooltip._options.bodyFontSize = tooltip._chart.height*0.039;
-							tooltip._options.yPadding = tooltip._options.bodyFontSize*0.30;
-							tooltip._options.xPadding = tooltip._options.bodyFontSize*0.30;
-							tooltip._options.caretSize = tooltip._options.bodyFontSize*0.5;
-							tooltip._options.cornerRadius = tooltip._options.bodyFontSize*0.50;
-							
+							tooltip._options.yPadding = tooltip._options.bodyFontSize*0.50;
+							tooltip._options.xPadding = tooltip._options.bodyFontSize*0.2;
+							tooltip._options.caretSize = tooltip._options.bodyFontSize*0.8;
+							tooltip._options.cornerRadius = tooltip._options.bodyFontSize*0.40;
+							tooltip._options.borderWidth = 1;
+							tooltip._options.borderColor = tooltip_bg;
+														
 							tooltip.update();
 							
 							// we don't actually need this since we are not animating tooltips
@@ -135,7 +137,7 @@ jQuery(document).ready(function($){
 							callbacks:{
 								 label: function (tooltipItem, data){
 									 var num = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-									return data.labels[tooltipItem.index]+": $"+ num.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+									return data.labels[tooltipItem.index]+": $"+ num.toFixed().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 								}
 							}
 						}
@@ -225,7 +227,7 @@ jQuery(document).ready(function($){
 							callbacks:{
 								 label: function (tooltipItem, data){
 									 var num = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-									return data.labels[tooltipItem.index]+": $"+num.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+									return data.labels[tooltipItem.index]+": $"+num.toFixed().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 								}
 							}
 						}
@@ -318,7 +320,7 @@ jQuery(document).ready(function($){
 							callbacks:{
 								 label: function (tooltipItem, data){
 									var num = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-									return data.labels[tooltipItem.index]+": $"+num.toFixed(2).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+									return data.labels[tooltipItem.index]+": $"+num.toFixed().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 								}
 							}
 						}
