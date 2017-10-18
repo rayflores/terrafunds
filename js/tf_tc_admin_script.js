@@ -1,11 +1,11 @@
 jQuery(document).ready(function($){
 			$( '.tf-color-picker' ).wpColorPicker();
-			
+		
+		
+	if ($('#calc_form').hasClass('tf_admin_form')){
+			$('.d10').after('here');
 			var calc  = $('.tf_admin_form').calx();
-            var sheet = calc.calx('getSheet');
-			
-			
-			
+	        var sheet = calc.calx('getSheet');
 			// tax-table-2
 			sheet.getCell('K28').setFormula($('.FK28').val());
 			sheet.getCell('O28').setFormula($('.FO28').val());
@@ -21,7 +21,6 @@ jQuery(document).ready(function($){
 			sheet.getCell('O33').setFormula($('.FO33').val());		
 			sheet.getCell('K34').setFormula($('.FK34').val());
 			sheet.getCell('O34').setFormula($('.FO34').val()); 
-			
 			// tax-table-3
 			sheet.getCell('B41').setFormula($('.FQ73').val());
 			sheet.getCell('B42').setFormula($('.FQ74').val());
@@ -62,7 +61,6 @@ jQuery(document).ready(function($){
 			sheet.getCell('C55').setFormula($('.FC55').val());
 			sheet.getCell('D55').setFormula($('.FD55').val());
 			sheet.getCell('E55').setFormula($('.FE55').val());
-			
 			// tax-table-4
 			sheet.getCell('G59').setFormula($('.FG59').val());
 			sheet.getCell('H59').setFormula($('.FH59').val());
@@ -126,7 +124,6 @@ jQuery(document).ready(function($){
 			sheet.getCell('Z77').setFormula($('.FZ77').val());
 			sheet.getCell('AC77').setFormula($('.FAC77').val());
 			sheet.getCell('AH77').setFormula($('.FAH77').val());
-			
 			sheet.getCell('M81').setFormula($('.FM81').val());
 			sheet.getCell('T81').setFormula($('.FT81').val());
 			sheet.getCell('AA81').setFormula($('.FAA81').val());
@@ -147,7 +144,6 @@ jQuery(document).ready(function($){
 			sheet.getCell('T85').setFormula($('.FT85').val());
 			sheet.getCell('AA85').setFormula($('.FAA85').val());
 			sheet.getCell('AK85').setFormula($('.FAK85').val());
-
 			sheet.getCell('T87').setFormula($('.FT87').val());
 			sheet.getCell('AA87').setFormula($('.FAA87').val());
 			sheet.getCell('AK87').setFormula($('.FAK87').val());
@@ -169,7 +165,6 @@ jQuery(document).ready(function($){
 			sheet.getCell('AA96').setFormula($('.FAA96').val());
 			sheet.getCell('AK97').setFormula($('.FAK97').val());
 			sheet.getCell('AA97').setFormula($('.FAA97').val());
-			
 			sheet.getCell('M99').setFormula($('.FM99').val());
 			sheet.getCell('T99').setFormula($('.FT99').val());
 			sheet.getCell('AA99').setFormula($('.FAA99').val());
@@ -191,6 +186,13 @@ jQuery(document).ready(function($){
 			$(document).on('keyup','.d10, .d12, .d14, .d22', function(e){
 				$('.tf_admin_form').calx('calculate');
 			});
+			
+} else {
+			var calc = $('.tf_admin_form_simple').calx();
+			
+		}			
+			
+			
 			
 			/**!
  * wp-color-picker-alpha

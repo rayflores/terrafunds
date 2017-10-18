@@ -81,8 +81,8 @@ jQuery(document).ready(function($){
 							tooltip._options.xPadding = tooltip._options.bodyFontSize*0.2;
 							tooltip._options.caretSize = tooltip._options.bodyFontSize*0.8;
 							tooltip._options.cornerRadius = tooltip._options.bodyFontSize*0.40;
-							tooltip._options.borderWidth = 1;
-							tooltip._options.borderColor = tooltip_bg;
+							tooltip._options.borderWidth = 3;
+							tooltip._options.borderColor = 'rgba(0,0,0,.1)';
 							tooltip._options.bodyFontFamily = title_font;
 														
 							tooltip.update();
@@ -103,6 +103,14 @@ jQuery(document).ready(function($){
 			if (tax_savings > 0 ){
 				var cash_outlay = 1000 - tax_savings;
 				var ctxone = document.getElementById("tfChartOne").getContext("2d");
+				var gradientdark = ctxone.createLinearGradient(0,200,0,0);
+						gradientdark.addColorStop(0,tax_bg);
+						gradientdark.addColorStop(1,"#B5B5B5");
+						ctxone.fillStyle = gradientdark;
+						var gradientgreen = ctxone.createLinearGradient(0,300,0,0);
+						gradientgreen.addColorStop(0,"#75D279");
+						gradientgreen.addColorStop(1,cash_bg);
+						ctxone.fillStyle = gradientgreen;
 				var tfChartOne = new Chart(ctxone, {
 					type:"pie",
 					data:{
@@ -110,11 +118,17 @@ jQuery(document).ready(function($){
 							["Tax Savings","Cash Outlay"],
 						datasets:[{
 							data:[tax_savings,cash_outlay],
-							backgroundColor:[tax_bg,cash_bg]
+							backgroundColor:[gradientdark,gradientgreen],
+							hoverBackgroundColor:[gradientdark,gradientgreen]
 							}
 						]
 					},
 					options:{
+						elements: {
+							arc: {
+								borderWidth: 0,
+							},
+						},
 						title: {
 							display: true,
 							fontFamily: "'"+title_font+"'",
@@ -175,10 +189,10 @@ jQuery(document).ready(function($){
 			$(document).on('change','.d10, .d12, .d14, .d22', function(e){
 				addData();
 			});
-			$(document).on('change','.prov_sel, .d18, .d20', function(e){
+			$(document).on('change','input[name=tf_tc_options_contribute_selection], input[name=tf_tc_options_capital_losses]', function(e){
 				addData();
 			});
-			$( "#tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5" ).on('slidechange', function( event, ui ){
+			$( "#tf-slider-1, #tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5, #tf-slider-6" ).on('slidechange', function( event, ui ){
 				addData();
 			});
 		
@@ -205,6 +219,11 @@ jQuery(document).ready(function($){
 						]
 					},
 					options:{
+						elements: {
+							arc: {
+								borderWidth: 0,
+							},
+						},
 						title: {
 							display: true,
 							fontFamily: "'"+title_font+"'",
@@ -263,10 +282,13 @@ jQuery(document).ready(function($){
 			$(document).on('change','.d10, .d12, .d14, .d22', function(e){
 				addData2();
 			});
-			$(document).on('change','.prov_sel, .d18, .d20', function(e){
+			$(document).on('change','.prov_sel', function(e){
 				addData2();
 			});
-			$( "#tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5" ).on('slidechange', function( event, ui ){
+			$(document).on('change','input[name=tf_tc_options_contribute_selection], input[name=tf_tc_options_capital_losses]', function(e){
+				addData2();
+			});
+			$( "#tf-slider-1, #tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5, #tf-slider-6" ).on('slidechange', function( event, ui ){
 				addData2();
 			});
 			
@@ -285,7 +307,15 @@ jQuery(document).ready(function($){
 			
 			if (tax_savings3 > 0 ){
 				var cash_outlay3 = investment_int - tax_savings3;
-				var ctxthree = document.getElementById("tfChartThree");
+				var ctxthree = document.getElementById("tfChartThree").getContext('2d');
+				var gradientdark = ctxthree.createLinearGradient(0,200,0,0);
+						gradientdark.addColorStop(0,tax_bg);
+						gradientdark.addColorStop(1,"#B5B5B5");
+						ctxthree.fillStyle = gradientdark;
+						var gradientgreen = ctxthree.createLinearGradient(0,300,0,0);
+						gradientgreen.addColorStop(0,"#75D279");
+						gradientgreen.addColorStop(1,cash_bg);
+						ctxthree.fillStyle = gradientgreen;
 				var tfChartThree = new Chart(ctxthree, {
 					type:"pie",
 					data:{
@@ -293,11 +323,17 @@ jQuery(document).ready(function($){
 							["Tax Savings","Cash Outlay"],
 						datasets:[{
 							data:[tax_savings3,cash_outlay3],
-							backgroundColor:[tax_bg,cash_bg]
+							backgroundColor:[gradientdark,gradientgreen],
+							hoverBackgroundColor:[gradientdark,gradientgreen]
 							}
 						]
 					},
 					options:{
+						elements: {
+							arc: {
+								borderWidth: 0,
+							},
+						},
 						title: {
 							display: true,
 							fontFamily: "'"+title_font+"'",
@@ -305,7 +341,7 @@ jQuery(document).ready(function($){
 							fontStyle: title_style,
 							padding: 10,
 							fontSize: title_size,
-							text: investment + ' Investment',
+							text: 'Recommended Investment: ' + investment,
 						},
 						responsive: false,
 						showAllTooltips: true,
@@ -323,7 +359,8 @@ jQuery(document).ready(function($){
 									var num = data.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
 									return data.labels[tooltipItem.index]+": $"+num.toFixed().replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
 								}
-							}
+							},
+							backgroundColor: ['rgba(0,0,0,0.8)','rgba(255,255,255,0.1)'],
 						}
 					}
 					
@@ -346,27 +383,33 @@ jQuery(document).ready(function($){
 					tfChartThree.data.datasets[0].data[1] = investment_int - tax_savings3;
 					tfChartThree.options.showAllTooltips = true;
 					tfChartThree.options.title.display = true;
-					tfChartThree.options.title.text = investment + " Investment";
+					tfChartThree.options.title.text = 'Recommended Investment: ' + investment;
 				} else if ( tax_savings3 > 0 && tax_savings3 > investment_int ){
 					tfChartThree.data.datasets[0].data[0] = tax_savings3;
 					tfChartThree.data.datasets[0].data[1] = 0;
 					tfChartThree.options.showAllTooltips = true;
 					tfChartThree.options.title.display = true;
+					tfChartThree.options.title.text = 'Recommended Investment: ' + investment;
 				} else {
 					tfChartThree.data.datasets[0].data[0] = 0;
 					tfChartThree.data.datasets[0].data[1] = 0;
 					tfChartThree.options.showAllTooltips = false;
 					tfChartThree.options.title.display = false;
+					tfChartThree.options.title.text = 'Recommended Investment: ' + investment;
 				}	
 				tfChartThree.update();
 			}
 			$(document).on('change','.d10, .d12, .d14, .d22', function(e){
 				addData3();
 			});
-			$(document).on('change','.prov_sel, .d18, .d20', function(e){
+			
+			$(document).on('change','.prov_sel', function(e){
 				addData3();
 			});
-			$( "#tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5" ).on('slidechange', function( event, ui ){
+			$(document).on('change','input[name=tf_tc_options_contribute_selection], input[name=tf_tc_options_capital_losses]', function(e){
+				addData3();
+			});
+			$( "#tf-slider-1, #tf-slider-2, #tf-slider-3, #tf-slider-4, #tf-slider-5, #tf-slider-6" ).on('slidechange', function( event, ui ){
 				addData3();
 			});
 			

@@ -1,7 +1,7 @@
 <?php
 /* Plugin Name:  TerraFunds Tax Calculator
 */
-class TF_Tax_Calc {
+class TF_Tax_Calc {  
 	/**
  	 * Option key, and option page slug
  	 * @var string
@@ -11,7 +11,7 @@ class TF_Tax_Calc {
  	 * Options page metabox id
  	 * @var string
  	 */
-	private $metabox_id = 'tf_tc_metabox';
+	private $subkey = 'tf_tc_simple_options';
 	/**
 	 * Options Page title
 	 * @var string
@@ -30,7 +30,9 @@ class TF_Tax_Calc {
 	private function __construct() {
 		// Set our title
 		$this->title = __( 'Tax Calc', 'wc-catc' );
+		$this->sub_title = __( 'Simple Tax Calc', 'wc-catc' );
 		add_shortcode('terra_calc', array($this, 'tf_tc_add_shortcode') );
+		add_shortcode('terra_calc_simple', array($this, 'tf_tc_add_simple_shortcode') );
 		
 		add_action('wp_enqueue_scripts', array($this, 'tf_tc_enqueue_scripts') );
 
@@ -84,56 +86,87 @@ class TF_Tax_Calc {
 		?>
 		<div class="tf_calc_main">
 		<form class="tf-form">
-			<table class="table-responsive tf_calc_table">
+			<table class="table-responsive tf_calc_table col-md-6 col-sm-6">
+			<tfoot>
+				<tr>
+				  <td colspan="2" class="footer">
+					<div class="adv-content" style="display:none;">
+						<?php echo isset($options['tf_tc_options_adv_inputs_footer']) ? $options['tf_tc_options_adv_inputs_footer'] : '* FMV means the Fair Market Value'; ?> 
+					</div>
+				  </td>
+				</tr>
+			  </tfoot>
 				<tbody>
 					<tr>
 						<td colspan="2"class="h2 size-color"><?php echo isset($options['tf_tc_options_calculator_title']) ? $options['tf_tc_options_calculator_title'] : 'Calculator Inputs'; ?></td>
 					</tr>
 					<tr>
-						<td>
+						<td valign="top" class="mobi">
 							<?php echo $options['tf_tc_options_step_1_label']; ?>
 						</td>
-						<td>
-							<select data-cell="D8" name="tf_tc_options[tf_tc_options_province_selection]" style="width:100%;text-align:center;text-align-last:center;" class="prov_sel">
-								<option value="BC" style="text-align:center;">BC</option>
+						<td class="slide-pad slider-td">
+						
+							<input type="hidden" data-cell="D8" name="tf_tc_options[tf_tc_options_province_selection]"  class="prov_sel" value="ON">
+							<!--	<option value="BC" style="text-align:center;">BC</option>
 								<option value="AB">AB</option>
 								<option value="SK">SK</option>
 								<option value="MB">MB</option>
 								<option value="ON" selected="selected">ON</option>
 								<option value="QC">QC</option>
 								<option value="NS">NS</option>
-							</select>	
+							</select> -->
+							<div class="tf-slider">
+								<div class="tf-ticks">
+									<span class="tick">BC</span>
+									<span class="tick" style="left:17.6667%;">AB</span>
+									<span class="tick" style="left:34.3333%;">SK</span>
+									<span class="tick" style="left:50%;">MB</span>
+									<span class="tick" style="left:66.6667%;">ON</span>
+									<span class="tick" style="left:83.3337%;">QC</span>
+									<span class="tick" style="left:100%;">NS</span>
+								</div>
+								<div id="tf-slider-1"></div>
+							</div>
 						</td>
 					</tr>
 					<tr>
-						<td valign="top">
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td valign="top" class="notopPad mobi">
 							<?php echo $options['tf_tc_options_step_2_label']; ?>
 						</td>
-						<td class="slider-td">
-							<input type="text" data-cell="D10" class="d10" value="160000" data-format="$ 0,0">
+						<td class="slider-td slide-pad" valign="bottom">
+							<input type="hidden" data-cell="D10" class="d10" value="160000" data-format="$ 0,0">
 							<div class="tf-slider">
 								<div id="tf-slider-2"></div>
 							</div>
 						</td>
 					</tr>
 					<tr>
-						<td valign="top">
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td valign="top" class="notopPad mobi">
 							<?php echo $options['tf_tc_options_step_3_label']; ?>
 						</td>
-						<td class="slider-td">
-							<input type="text" data-cell="D12" class="d12" value="0" data-format="$ 0,0">
+						<td class="slider-td slide-pad" valign="bottom">
+							<input type="hidden" data-cell="D12" class="d12" value="0" data-format="$ 0,0">
 							<div class="tf-slider">
 								<div id="tf-slider-3"></div>
 							</div>
 						</td>
 						
 					</tr>
-					<tr valign="top">
-						<td>
+					<tr>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td valign="top" class="notopPad mobi">
 							<?php echo $options['tf_tc_options_step_4_label']; ?>
 						</td>
-						<td class="slider-td">
-							<input type="text" data-cell="D14" class="d14" value="0" data-format="$ 0,0">
+						<td class="slider-td slide-pad" valign="bottom">
+							<input type="hidden" data-cell="D14" class="d14" value="0" data-format="$ 0,0">
 							<div class="tf-slider">
 								<div id="tf-slider-4"></div>
 							</div>
@@ -142,119 +175,187 @@ class TF_Tax_Calc {
 
 					</tr>
 					<tr>
-						<td>
+						<td colspan="2"></td>
+					</tr>
+					<tr>
+						<td valign="top" class="outer-label mobi">
 							<?php echo $options['tf_tc_options_step_5_label']; ?>
 						</td>
-						<td>
-							<select class="d18" data-cell="D18" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;">
-								<option value="NO" selected="selected">No</option>
-								<option value="YES - Contribute to RRSP">Yes - Contribute to RRSP</option>
-								<option value="YES - Donate">Yes - Donate</option>
-							</select>	
+						<td id="radio-outer" valign="bottom">
+							<input type="hidden" class="d18" data-cell="D18" name="tf_tc_options_contribute_selection" value="NO">
+							<ul>
+								<li class="li-1"><label for="r1">No</label>
+										<input type="radio" name="tf_tc_options_contribute_selection" value="NO" checked="checked">
+								</li>
+								<li class="li-1"><label for="r2a">Reinvest</label> 
+										<input type="radio" name="tf_tc_options_contribute_selection" value="YES - Reinvest">	
+								</li>
+								<li class="li-1"><label for="r2">RRSP</label> 
+										<input type="radio" name="tf_tc_options_contribute_selection" value="YES - Contribute to RRSP">	
+								</li>
+								<li class="li-1"><label for="r3">Donate</label>
+										<input type="radio" name="tf_tc_options_contribute_selection" value="YES - Donate">
+								</li>
+							</ul>
+
+								<!-- <option value="NO" selected="selected">No</option>
+								 <option value="YES - Contribute to RRSP">Yes - Contribute to RRSP</option>
+								 <option value="YES - Donate">Yes - Donate</option> -->	
+
 						</td>
 					</tr>
 					<tr>
-						<td>
+						<td valign="top" class="outer-label mobi">
 							<?php echo $options['tf_tc_options_step_6_label']; ?>
 						</td>
-						<td>
-							<select data-cell="D20" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;" class="d20">
-								<option value="NO">No</option>
-								<option value="YES">Yes</option>
-							</select>	
+						<td id="radio-outer" valign="bottom">
+							<input type="hidden" data-cell="D20" name="tf_tc_options_capital_losses" class="d20" value="NO">
+								<ul class="rtwo">
+								<li><label for="r4">No</label>
+										<input type="radio" name="tf_tc_options_capital_losses" value="NO" checked="checked">
+								</li>
+								<li><label for="r5">Yes</label> 
+										<input type="radio" name="tf_tc_options_capital_losses" value="YES">	
+								</li>
+							</ul>
 						</td>
 					</tr>
-					<tr>
-						<td valign="top">
-							<?php echo $options['tf_tc_options_step_7_label']; ?>
-						</td>
-						<td class="slider-td">
-							<input type="text" data-cell="D22" class="d22" value="75" data-format="0%">
-							<div class="tf-slider">
-								<div id="tf-slider-5"></div>
-							</div>
-						</td>
-						
-					</tr>
+						<tr>
+							<td id="show-adv" class="h2 size-color" valign="top" align="center" colspan="2"><div class="fa fa-chevron-down rotate"></div>Advanced Inputs
+							</td>
+						</tr>
+						<tr class="shownone">
+							<td colspan="2">&nbsp;</td>
+						</tr>
+						<tr>
+							<td valign="top" class="mobi">	
+								<div class="adv-content" style="display:none;">
+										<?php echo $options['tf_tc_options_step_7_label']; ?>
+								</div>		
+							</td>
+							<td class="slider-td slide-pad">
+								<div class="adv-content" style="display:none;">	
+										<input type="hidden" data-cell="D22" class="d22" value="75" data-format="0%">
+										<div class="tf-slider">
+											<div id="tf-slider-5"></div>
+										</div>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top" class="mobi">	
+								<div class="adv-content" style="display:none;">
+										<?php echo isset($options['tf_tc_options_step_8_label']) ? $options['tf_tc_options_step_8_label'] : 'Maximum % of taxable income to invest'; ?>
+								</div>		
+							</td>	
+							<td class="slider-td slide-pad">
+								<div class="adv-content" style="display:none;">	
+										<input type="hidden" data-cell="B17" class="b17" value="10" data-format="0%">
+										<div class="tf-slider">
+											<div id="tf-slider-6"></div>
+										</div>
+								</div>
+							</td>
+						</tr>
+					
 				</tbody>
 			</table>
+
+			<div class="chart-single col-md-6 col-sm-6" style="">
+				<canvas id="tfChartThree" width="350" height="350" style="display:inline-block;"></canvas>
+			</div>
+
+
 		<div class="extra">
 			<table class="tf-tc-results table-responsive">
 				<tbody>
 					<tr>
-						<td colspan="4" class="h2 size-color"><?php echo isset($options['tf_tc_options_results_title']) ? $options['tf_tc_options_results_title'] : 'Total Tax Savings'; ?></td>
+						<td colspan="4" class="h2 size-color show-summary"><div class="fa fa-chevron-down rotate2"></div><?php echo isset($options['tf_tc_options_results_title']) ? $options['tf_tc_options_results_title'] : 'Summary of Tax Savings'; ?></td>
 					</tr>
 					<tr>
 						<td></td>
-						<td valign="bottom" class="noPad text-center"><input type="hidden" data-cell="F43" data-formula='<?php echo $options['tf_tc_options_F43_formula']; ?>'/><label data-cell="C46" data-formula='<?php echo $options['tf_tc_options_C46_formula'];?>'></label></td>
-						<td valign="bottom" class="noPad text-center"><input type="hidden" data-cell="G43" data-formula='<?php echo $options['tf_tc_options_G43_formula']; ?>'/><label data-cell="D46" data-formula='<?php echo $options['tf_tc_options_D46_formula']; ?>'></label></td>
-						<td valign="bottom" class="noPad text-center">
-						<label data-cell="E46" data-formula='<?php echo $options['tf_tc_options_E46_formula']; ?>'></label></td>
 					</tr>
 					<tr>
-						<td class="noPad">Investment</td>
-						<td class="text-center noPad"><label class="C47" data-cell="C47" data-formula='<?php echo $options['tf_tc_options_C47_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center noPad"><label data-cell="D47" data-formula='<?php echo $options['tf_tc_options_D47_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center noPad"><label class="E47" data-cell="E47" data-formula='<?php echo $options['tf_tc_options_E47_formula']; ?>' data-format="$0,0"></label></td>
+						<td></td>
 					</tr>
 					<tr>
-						<td colspan="4" class="noPad"><hr class="sep"/></td>
+						<td class="first">&nbsp;</td>
+						<td valign="bottom" class="noPad text-center second"><div class="tax-content"><input type="hidden" data-cell="F43" data-formula='<?php echo $options['tf_tc_options_F43_formula']; ?>'/><label data-cell="C46" data-formula='<?php echo $options['tf_tc_options_C46_formula'];?>'></label></div></td>
+						<td valign="bottom" class="noPad text-center second"><div class="tax-content"><input type="hidden" data-cell="G43" data-formula='<?php echo $options['tf_tc_options_G43_formula']; ?>'/><label data-cell="D46" data-formula='<?php echo $options['tf_tc_options_D46_formula']; ?>'></label></div></td>
+						<td valign="bottom" class="noPad text-center second"><div class="tax-content">
+						<label data-cell="E46" data-formula='<?php echo $options['tf_tc_options_E46_formula']; ?>' class="padR"></label></div></td>
 					</tr>
 					<tr>
-						<td>Tax Rate</td>
-						<td class="text-center"><label data-cell="C49" data-formula='<?php echo $options['tf_tc_options_C49_formula']; ?>' data-format="0.00%"></label></td>
-						<td class="text-center"><label data-cell="D49" data-formula='<?php echo $options['tf_tc_options_D49_formula']; ?>' data-format="0.00%"></label></td>
-						<td class="text-center"><label data-cell="E49" data-formula='<?php echo $options['tf_tc_options_E49_formula']; ?>' data-format="0.00%"></label></td>
+						<td class="noPad first"><div class="tax-content">Investment</div></td>
+						<td class="text-center noPad second"><div class="tax-content"><label class="C47" data-cell="C47" data-formula='<?php echo $options['tf_tc_options_C47_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center noPad second"><div class="tax-content"><label data-cell="D47" data-formula='<?php echo $options['tf_tc_options_D47_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center noPad second"><div class="tax-content"><label class="E47" data-cell="E47" data-formula='<?php echo $options['tf_tc_options_E47_formula']; ?>' data-format="$0,0"></label></div></td>
 					</tr>
-					<tr>
-						<td colspan="4" class="noPad"><hr class="sep"/></td>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
 					</tr>
-					<tr>
-						<td>Tax savings</td>
-						<td class="text-center"><label data-cell="C50" data-formula='<?php echo $options['tf_tc_options_C50_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center"><label data-cell="D50" data-formula='<?php echo $options['tf_tc_options_D50_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center"><label data-cell="E50" data-formula='<?php echo $options['tf_tc_options_E50_formula']; ?>' data-format="$0,0"></label></td>
+			-->		<tr class="topBorder tax-content">
+						<td class="first"><div class="tax-content">Tax Rate</div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="C49" data-formula='<?php echo $options['tf_tc_options_C49_formula']; ?>' data-format="0.00%"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="D49" data-formula='<?php echo $options['tf_tc_options_D49_formula']; ?>' data-format="0.00%"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="E49" data-formula='<?php echo $options['tf_tc_options_E49_formula']; ?>' data-format="0.00%"></label></div></td>
 					</tr>
-					<tr>
-						<td colspan="4" class="noPad"><hr class="sep"/></td>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
 					</tr>
-					<tr>
-						<td>ITC savings</td>
-						<td class="text-center"><label data-cell="C52" data-formula='<?php echo $options['tf_tc_options_C52_formula']; ?>' data-format="$0"></label></td>
-						<td class="text-center"><label data-cell="D52" data-formula='<?php echo $options['tf_tc_options_D52_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center"><label data-cell="E52" data-formula='<?php echo $options['tf_tc_options_E52_formula']; ?>' data-format="$0,0"></label></td>
+			-->		<tr class="topBorder tax-content">
+						<td class="first"><div class="tax-content">Tax savings</div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="C50" data-formula='<?php echo $options['tf_tc_options_C50_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="D50" data-formula='<?php echo $options['tf_tc_options_D50_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="E50" data-formula='<?php echo $options['tf_tc_options_E50_formula']; ?>' data-format="$0,0"></label></div></td>
 					</tr>
-					<tr>
-						<td colspan="4" class="noPad"><hr class="sep"/></td>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
 					</tr>
-					<tr>
-						<td><label data-cell="B53" data-formula='<?php echo $options['tf_tc_options_B53_formula']; ?>'></label></td>
-						<td class="text-center"><label data-cell="C53" data-formula='<?php echo $options['tf_tc_options_C53_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center"><label data-cell="D53" data-formula='<?php echo $options['tf_tc_options_D53_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center"><label data-cell="E53" data-formula='<?php echo $options['tf_tc_options_E53_formula']; ?>' data-format="$0,0"></label></td> 
+			-->		<tr class="topBorder tax-content">
+						<td class="first"><div class="tax-content">ITC savings</div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="C52" data-formula='<?php echo $options['tf_tc_options_C52_formula']; ?>' data-format="$0"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="D52" data-formula='<?php echo $options['tf_tc_options_D52_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="E52" data-formula='<?php echo $options['tf_tc_options_E52_formula']; ?>' data-format="$0,0"></label></div></td>
 					</tr>
-					<tr>
-						<td colspan="4" class="noPad"><hr class="sep"/></td>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
 					</tr>
-					<tr>
-						<td><label data-cell="B54" data-formula='<?php echo $options['tf_tc_options_B54_formula']; ?>'></label></td>
-						<td class="hr text-center"><label data-cell="C54" data-formula='<?php echo $options['tf_tc_options_C54_formula']; ?>' data-format="($0,0)"></label></td>
-						<td class="hr text-center"><label data-cell="D54" data-formula='<?php echo $options['tf_tc_options_D54_formula']; ?>' data-format="($0,0)"></label></td>
-						<td class="hr text-center"><label data-cell="E54" data-formula='<?php echo $options['tf_tc_options_E54_formula']; ?>' data-format="($0,0)"></label></td>
+			-->		<tr class="topBorder tax-content">
+						<td class="first"><div class="tax-content"><label data-cell="B53" data-formula='<?php echo $options['tf_tc_options_B53_formula']; ?>'></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="C53" data-formula='<?php echo $options['tf_tc_options_C53_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="D53" data-formula='<?php echo $options['tf_tc_options_D53_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label data-cell="E53" data-formula='<?php echo $options['tf_tc_options_E53_formula']; ?>' data-format="$0,0"></label></div></td> 
 					</tr>
-					<tr>
-						<td colspan="4" class="noPad"><hr class="sep-3"/></td>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
 					</tr>
-					<tr class="total-results allBold">
-						<td valign="top">Total tax savings</td>
-						<td class="text-center"><label class="C55" data-cell="C55" data-formula='<?php echo $options['tf_tc_options_C55_formula']; ?>' data-format="$0,0" value=""></label></td>
-						<td class="text-center"><label class="D55" data-cell="D55" data-formula='<?php echo $options['tf_tc_options_D55_formula']; ?>' data-format="$0,0"></label></td>
-						<td class="text-center"><label class="E55" data-cell="E55" data-formula='<?php echo $options['tf_tc_options_E55_formula']; ?>' data-format="$0,0"></label></td>
+			-->		<tr class="topBorder tax-content">
+						<td class="first"><div class="tax-content"><label data-cell="B54" data-formula='<?php echo $options['tf_tc_options_B54_formula']; ?>'></label></div></td>
+						<td class="hr text-center second"><div class="tax-content"><label data-cell="C54" data-formula='<?php echo $options['tf_tc_options_C54_formula']; ?>' data-format="($0,0)"></label></div></td>
+						<td class="hr text-center second"><div class="tax-content"><label data-cell="D54" data-formula='<?php echo $options['tf_tc_options_D54_formula']; ?>' data-format="($0,0)"></label></div></td>
+						<td class="hr text-center second"><div class="tax-content"><label data-cell="E54" data-formula='<?php echo $options['tf_tc_options_E54_formula']; ?>' data-format="($0,0)"></label></div></td>
+					</tr>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
+					</tr>
+			-->		<tr class="total-results allBold topBorder tax-content">
+						<td valign="top" class="first"><div class="tax-content">Total tax savings</div></td>
+						<td class="text-center second"><div class="tax-content"><label class="C55" data-cell="C55" data-formula='<?php echo $options['tf_tc_options_C55_formula']; ?>' data-format="$0,0" value=""></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label class="D55" data-cell="D55" data-formula='<?php echo $options['tf_tc_options_D55_formula']; ?>' data-format="$0,0"></label></div></td>
+						<td class="text-center second"><div class="tax-content"><label class="E55" data-cell="E55" data-formula='<?php echo $options['tf_tc_options_E55_formula']; ?>' data-format="$0,0"></label></div></td>
 						
 					</tr>
 				</tbody>
 			</table>
 		</div>
+
 			<input type="hidden" data-cell="C48" data-formula='<?php echo $options['tf_tc_options_C48_formula']; ?>' />
 			<input type="hidden" data-cell="D48" data-formula='<?php echo $options['tf_tc_options_D48_formula']; ?>' />
 			<input type="hidden" data-cell="E48" data-formula='<?php echo $options['tf_tc_options_E48_formula']; ?>' />
@@ -262,7 +363,7 @@ class TF_Tax_Calc {
 			<input type="hidden" data-cell="D51" data-formula='<?php echo $options['tf_tc_options_D51_formula']; ?>' data-format="$0,0" />
 			<input type="hidden" data-cell="E51" data-formula='<?php echo $options['tf_tc_options_E51_formula']; ?>' data-format="$0,0" />
 
-			<input type="hidden" data-cell="B17" value="<?php echo $options['tf_tc_options_B17_formula']; ?>"/>
+			
 			<input type="hidden" data-cell="H28" data-formula='<?php echo $options['tf_tc_options_H28']; ?>'/>
 			<input type="hidden" data-cell="H29" data-formula='<?php echo $options['tf_tc_options_H29']; ?>'/>
 			<input type="hidden" data-cell="H30" data-formula='<?php echo $options['tf_tc_options_H30']; ?>'/>
@@ -466,9 +567,9 @@ class TF_Tax_Calc {
 		</table>
 		
 		<div class="charts" style="clear:both;text-align:center">
-			<canvas id="tfChartOne" width="350" height="350" style="display:inline-block;"></canvas>
-			<canvas id="tfChartTwo" width="350" height="350" style="display:inline-block;"></canvas>
-			<canvas id="tfChartThree" width="350" height="350" style="display:inline-block;"></canvas>
+			<canvas id="tfChartOne" width="350" height="350" style="display:none;"></canvas>
+			<canvas id="tfChartTwo" width="350" height="350" style="display:none;"></canvas>
+
 		</div>
 
 		</form>
@@ -482,6 +583,460 @@ class TF_Tax_Calc {
 
 		<?php 
 		return ob_get_clean();
+	}
+	/*
+	Slim Down Version
+	*/
+	public function tf_tc_add_simple_shortcode(){
+		
+		$options= get_option($this->key);
+		ob_start();
+		if ($options) {
+		?>
+		<div class="tf_calc_simple_main">
+		<form class="tf-form">
+			<table class="table-responsive tf_calc_table_simple">
+			<tfoot>
+				<tr>
+				  <td colspan="2" class="footer">
+					<div class="adv-content" style="display:none;">
+						<?php echo isset($options['tf_tc_options_adv_inputs_footer']) ? $options['tf_tc_options_adv_inputs_footer'] : '* FMV means the Fair Market Value'; ?> 
+					</div>
+				  </td>
+				</tr>
+			  </tfoot>
+				<tbody>
+					<tr>
+						<td colspan="2"class="h2 size-color medium"><?php echo isset($options['tf_tc_options_calculator_title']) ? $options['tf_tc_options_calculator_title'] : 'Calculator Inputs'; ?></td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					<tr>
+						<td valign="top" class="outer-label light">
+							<?php echo $options['tf_tc_options_step_1_label']; ?>
+						</td>
+						<td class="slide-pad slider-td">
+						
+							<input type="hidden" data-cell="D8" name="tf_tc_options[tf_tc_options_province_selection]"  class="prov_sel" value="ON">
+							<!--	<option value="BC" style="text-align:center;">BC</option>
+								<option value="AB">AB</option>
+								<option value="SK">SK</option>
+								<option value="MB">MB</option>
+								<option value="ON" selected="selected">ON</option>
+								<option value="QC">QC</option>
+								<option value="NS">NS</option>
+							</select> -->
+							<div class="tf-slider">
+								<div class="tf-ticks">
+									<span class="tick light">BC</span>
+									<span class="tick light" style="left:17.6667%;">AB</span>
+									<span class="tick light" style="left:34.3333%;">SK</span>
+									<span class="tick light" style="left:50%;">MB</span>
+									<span class="tick light" style="left:66.6667%;">ON</span>
+									<span class="tick light" style="left:83.3337%;">QC</span>
+									<span class="tick light" style="left:100%;">NS</span>
+								</div>
+								<div id="tf-slider-1"></div>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+
+							<input type="hidden" data-cell="D10" class="d10" value="500000" data-format="$ 0,0">
+
+					
+
+							<input type="hidden" data-cell="D12" class="d12" value="0" data-format="$ 0,0">
+
+
+							<input type="hidden" data-cell="D14" class="d14" value="0" data-format="$ 0,0">
+
+					<tr>
+						<td valign="top" class="outer-label  light">
+							<?php echo $options['tf_tc_options_step_5_label']; ?>
+						</td>
+						<td id="radio-outer" valign="bottom">
+							<input type="hidden" class="d18 light" data-cell="D18" name="tf_tc_options_contribute_selection" value="NO">
+							<ul>
+								<li class="li-1"><label for="r1" class="light">No</label>
+										<input type="radio" name="tf_tc_options_contribute_selection" value="NO" checked="checked">
+								</li>
+								<li class="li-1"><label for="r2a" class="light">Reinvest</label> 
+										<input type="radio" name="tf_tc_options_contribute_selection" value="YES - Reinvest">	
+								</li>
+								<li class="li-1"><label for="r2" class="light">RRSP</label> 
+										<input type="radio" name="tf_tc_options_contribute_selection" value="YES - Contribute to RRSP">	
+								</li>
+								<li class="li-1"><label for="r3" class="light">Donate</label>
+										<input type="radio" name="tf_tc_options_contribute_selection" value="YES - Donate">
+								</li>
+							</ul>
+
+								<!-- <option value="NO" selected="selected">No</option>
+								 <option value="YES - Contribute to RRSP">Yes - Contribute to RRSP</option>
+								 <option value="YES - Donate">Yes - Donate</option> -->	
+
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					<tr>
+						<td valign="top" class="outer-label light">
+							<?php echo $options['tf_tc_options_step_6_label']; ?>
+						</td>
+						<td id="radio-outer" valign="bottom" class="light">
+							<input type="hidden" data-cell="D20" name="tf_tc_options_capital_losses" class="d20" value="NO">
+								<ul class="rtwo">
+								<li><label for="r4" class="light">No</label>
+										<input type="radio" name="tf_tc_options_capital_losses" value="NO" checked="checked">
+								</li>
+								<li><label for="r5" class="light">Yes</label> 
+										<input type="radio" name="tf_tc_options_capital_losses" value="YES">	
+								</li>
+							</ul>
+						</td>
+					</tr>
+
+										<input type="hidden" data-cell="D22" class="d22" value="75" data-format="0%">
+
+
+										<input type="hidden" data-cell="B17" class="b17" value="10" data-format="0%">
+
+					
+				</tbody>
+			</table>
+
+			
+		
+
+			<div class="chart-single-simple" style="">
+				<canvas id="tfChartOne" width="350" height="350" style="display:inline-block;"></canvas>
+				<div class="more-options-simple medium">
+					<div class="p-simple">
+						<div class="medium-small">FOR MORE OPTIONS</div>
+					</div>
+					
+					<div class="uabb-module-content uabb-button-wrap uabb-creative-button-wrap uabb-button-width-custom uabb-creative-button-width-custom uabb-button-center uabb-creative-button-center uabb-button-reponsive-center uabb-creative-button-reponsive-center uabb-button-has-icon uabb-creative-button-has-icon">
+						<a href="/tax-savings-calculator/" target="_self" class="uabb-button uabb-creative-button uabb-creative-transparent-btn  uabb-transparent-fade-btn simple-calc-button " role="button">
+
+											<i class="uabb-button-icon uabb-creative-button-icon uabb-button-icon-before uabb-creative-button-icon-before fa ua-icon ua-icon-calculator"></i>
+											<span class="uabb-button-text uabb-creative-button-text medium-white">GO TO CALCULATOR</span>
+							
+						
+						</a>
+					</div>
+				</div>
+			</div>
+			
+			<table class="tf-tc-results-simple table-responsive">
+				<tbody>
+					<tr>
+						<td colspan="2" class="h2 size-color simple-title medium">
+							<?php echo isset($options['tf_tc_options_results_title']) ? $options['tf_tc_options_results_title'] : 'Summary of Tax Savings'; ?>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					<tr>
+						<td colspan="2">&nbsp;</td>
+					</tr>
+					
+					<tr>
+						<td class="noPad first sBold">Investment</td>
+						<td class="text-center noPad second"><label class="C47 sBold" data-cell="C47" data-formula='<?php echo $options['tf_tc_options_C47_formula']; ?>' data-format="$0,0"></label></td>
+						
+					</tr>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
+					</tr>
+			-->		<tr class="topBorder">
+						<td class="first light">Tax Rate (maximum)</td>
+						<td class="text-center second"><label data-cell="C49" data-formula='<?php echo $options['tf_tc_options_C49_formula']; ?>' data-format="0.00%" class="nBold light"></label></td>
+						
+					</tr>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
+					</tr>
+			-->		<tr class="topBorder">
+						<td class="first light">Tax savings</td>
+						<td class="text-center second"><label data-cell="C50" data-formula='<?php echo $options['tf_tc_options_C50_formula']; ?>' data-format="$0,0" class="nBold light"></label></td>
+						
+					</tr>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
+					</tr>
+			-->		<tr class="topBorder">
+						<td class="first light">ITC savings</td>
+						<td class="text-center second"><label data-cell="C52" data-formula='<?php echo $options['tf_tc_options_C52_formula']; ?>' data-format="$0" class="nBold light"></label></td>
+						
+					</tr>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
+					</tr>
+			-->		<tr class="topBorder">
+						<td class="first light"><label data-cell="B53" data-formula='<?php echo $options['tf_tc_options_B53_formula']; ?>'></label></td>
+						<td class="text-center second"><label data-cell="C53" data-formula='<?php echo $options['tf_tc_options_C53_formula']; ?>' data-format="$0,0" class="nBold light"></label></td>
+						
+					</tr>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
+					</tr>
+			-->		<tr class="topBorder">
+						<td class="first"><label data-cell="B54" data-formula='<?php echo $options['tf_tc_options_B54_formula']; ?>' class="nBold light"></label></td>
+						<td class="hr text-center second"><label data-cell="C54" data-formula='<?php echo $options['tf_tc_options_C54_formula']; ?>' data-format="($0,0)" class="nBold light"></label></td>
+						
+					</tr>
+			<!--		<tr>
+						<td colspan="3" class="noPad"><div class="tax-content"><hr class="sep"/></div></td>
+						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
+					</tr>
+			-->		<tr class="total-results allBold topBorder">
+						<td valign="top" class="first sBold">Total tax savings</td>
+						<td class="text-center second"><label class="C55 sBold" data-cell="C55" data-formula='<?php echo $options['tf_tc_options_C55_formula']; ?>' data-format="$0,0" value=""></label></td>
+						
+						
+					</tr>
+				</tbody>
+			</table>
+
+			<input type="hidden" data-cell="C48" data-formula='<?php echo $options['tf_tc_options_C48_formula']; ?>' />
+			<input type="hidden" data-cell="D48" data-formula='<?php echo $options['tf_tc_options_D48_formula']; ?>' />
+			<input type="hidden" data-cell="E48" data-formula='<?php echo $options['tf_tc_options_E48_formula']; ?>' />
+			<input type="hidden" data-cell="C51" data-formula='<?php echo $options['tf_tc_options_C51_formula']; ?>' data-format="$0,0" />
+			<input type="hidden" data-cell="D51" data-formula='<?php echo $options['tf_tc_options_D51_formula']; ?>' data-format="$0,0" />
+			<input type="hidden" data-cell="E51" data-formula='<?php echo $options['tf_tc_options_E51_formula']; ?>' data-format="$0,0" />
+
+			
+			<input type="hidden" data-cell="H28" data-formula='<?php echo $options['tf_tc_options_H28']; ?>'/>
+			<input type="hidden" data-cell="H29" data-formula='<?php echo $options['tf_tc_options_H29']; ?>'/>
+			<input type="hidden" data-cell="H30" data-formula='<?php echo $options['tf_tc_options_H30']; ?>'/>
+			<input type="hidden" data-cell="H31" data-formula='<?php echo $options['tf_tc_options_H31']; ?>'/>
+			<input type="hidden" data-cell="H32" data-formula='<?php echo $options['tf_tc_options_H32']; ?>'/>
+			<input type="hidden" data-cell="H33" data-formula='<?php echo $options['tf_tc_options_H33']; ?>'/>
+			<input type="hidden" data-cell="H34" data-formula='<?php echo $options['tf_tc_options_H34']; ?>'/>
+			
+			<input type="hidden" data-cell="I28" data-formula='<?php echo $options['tf_tc_options_I28']; ?>'/>
+			<input type="hidden" data-cell="I29" data-formula='<?php echo $options['tf_tc_options_I29']; ?>'/>
+			<input type="hidden" data-cell="I30" data-formula='<?php echo $options['tf_tc_options_I30']; ?>'/>
+			<input type="hidden" data-cell="I31" data-formula='<?php echo $options['tf_tc_options_I31']; ?>'/>
+			<input type="hidden" data-cell="I32" data-formula='<?php echo $options['tf_tc_options_I32']; ?>'/>
+			<input type="hidden" data-cell="I33" data-formula='<?php echo $options['tf_tc_options_I33']; ?>'/>
+			<input type="hidden" data-cell="I34" data-formula='<?php echo $options['tf_tc_options_I34']; ?>'/>
+			
+			<input type="hidden" data-cell="J28" data-formula='<?php echo $options['tf_tc_options_J28']; ?>'/>
+			<input type="hidden" data-cell="J29" data-formula='<?php echo $options['tf_tc_options_J29']; ?>'/>
+			<input type="hidden" data-cell="J30" data-formula='<?php echo $options['tf_tc_options_J30']; ?>'/>
+			<input type="hidden" data-cell="J31" data-formula='<?php echo $options['tf_tc_options_J31']; ?>'/>
+			<input type="hidden" data-cell="J32" data-formula='<?php echo $options['tf_tc_options_J32']; ?>'/>
+			<input type="hidden" data-cell="J33" data-formula='<?php echo $options['tf_tc_options_J33']; ?>'/>
+			<input type="hidden" data-cell="J34" data-formula='<?php echo $options['tf_tc_options_J34']; ?>'/>
+			
+			<input type="hidden" data-cell="K28" data-formula='<?php echo $options['tf_tc_options_K28_formula']; ?>'/>
+			<input type="hidden" data-cell="K29" data-formula='<?php echo $options['tf_tc_options_K29_formula']; ?>'/>
+			<input type="hidden" data-cell="K30" data-formula='<?php echo $options['tf_tc_options_K30_formula']; ?>'/>
+			<input type="hidden" data-cell="K31" data-formula='<?php echo $options['tf_tc_options_K31_formula']; ?>'/>
+			<input type="hidden" data-cell="K32" data-formula='<?php echo $options['tf_tc_options_K32_formula']; ?>'/>
+			<input type="hidden" data-cell="K33" data-formula='<?php echo $options['tf_tc_options_K33_formula']; ?>'/>
+			<input type="hidden" data-cell="K34" data-formula='<?php echo $options['tf_tc_options_K34_formula']; ?>'/>
+			
+			<input type="hidden" data-cell="L28" data-formula='<?php echo $options['tf_tc_options_L28']; ?>'/>
+			<input type="hidden" data-cell="L29" data-formula='<?php echo $options['tf_tc_options_L29']; ?>'/>
+			<input type="hidden" data-cell="L30" data-formula='<?php echo $options['tf_tc_options_L30']; ?>'/>
+			<input type="hidden" data-cell="L31" data-formula='<?php echo $options['tf_tc_options_L31']; ?>'/>
+			<input type="hidden" data-cell="L32" data-formula='<?php echo $options['tf_tc_options_L32']; ?>'/>
+			<input type="hidden" data-cell="L33" data-formula='<?php echo $options['tf_tc_options_L33']; ?>'/>
+			<input type="hidden" data-cell="L34" data-formula='<?php echo $options['tf_tc_options_L34']; ?>'/>
+			
+			<input type="hidden" data-cell="M28" data-formula='<?php echo $options['tf_tc_options_M28']; ?>'/>
+			<input type="hidden" data-cell="M29" data-formula='<?php echo $options['tf_tc_options_M29']; ?>'/>
+			<input type="hidden" data-cell="M30" data-formula='<?php echo $options['tf_tc_options_M30']; ?>'/>
+			<input type="hidden" data-cell="M31" data-formula='<?php echo $options['tf_tc_options_M31']; ?>'/>
+			<input type="hidden" data-cell="M32" data-formula='<?php echo $options['tf_tc_options_M32']; ?>'/>
+			<input type="hidden" data-cell="M33" data-formula='<?php echo $options['tf_tc_options_M33']; ?>'/>
+			<input type="hidden" data-cell="M34" data-formula='<?php echo $options['tf_tc_options_M34']; ?>'/>
+			
+			<input type="hidden" data-cell="N28" data-formula='<?php echo $options['tf_tc_options_N28']; ?>'/>
+			<input type="hidden" data-cell="N29" data-formula='<?php echo $options['tf_tc_options_N29']; ?>'/>
+			<input type="hidden" data-cell="N30" data-formula='<?php echo $options['tf_tc_options_N30']; ?>'/>
+			<input type="hidden" data-cell="N31" data-formula='<?php echo $options['tf_tc_options_N31']; ?>'/>
+			<input type="hidden" data-cell="N32" data-formula='<?php echo $options['tf_tc_options_N32']; ?>'/>
+			<input type="hidden" data-cell="N33" data-formula='<?php echo $options['tf_tc_options_N33']; ?>'/>
+			<input type="hidden" data-cell="N34" data-formula='<?php echo $options['tf_tc_options_N34']; ?>'/>
+			
+			<input type="hidden" data-cell="O28" data-formula='<?php echo $options['tf_tc_options_O28_formula']; ?>'/>
+			<input type="hidden" data-cell="O29" data-formula='<?php echo $options['tf_tc_options_O29_formula']; ?>'/>
+			<input type="hidden" data-cell="O30" data-formula='<?php echo $options['tf_tc_options_O30_formula']; ?>'/>
+			<input type="hidden" data-cell="O31" data-formula='<?php echo $options['tf_tc_options_O31_formula']; ?>'/>
+			<input type="hidden" data-cell="O32" data-formula='<?php echo $options['tf_tc_options_O32_formula']; ?>'/>
+			<input type="hidden" data-cell="O33" data-formula='<?php echo $options['tf_tc_options_O33_formula']; ?>'/>
+			<input type="hidden" data-cell="O34" data-formula='<?php echo $options['tf_tc_options_O34_formula']; ?>'/>
+
+
+			<input type="hidden" data-cell="E33" data-formula='<?php echo $options['tf_tc_options_E33_formula']; ?>'/>
+			<input type="hidden" data-cell="E34" data-formula='<?php echo $options['tf_tc_options_E34_formula']; ?>'/>
+			<input type="hidden" data-cell="E35" data-formula='<?php echo $options['tf_tc_options_E35_formula']; ?>' data-format="($ 0,0)"/>
+			<input type="hidden" data-cell="E36" data-formula='<?php echo $options['tf_tc_options_E36_formula']; ?>'/>
+			
+			<input type="hidden" data-cell="J41" data-formula='<?php echo $options['tf_tc_options_J41_formula']; ?>' data-format="$0,0"/>
+			<input type="hidden" data-cell="J42" data-formula='<?php echo $options['tf_tc_options_J42_formula']; ?>' data-format="$0,0"/>
+			<input type="hidden" data-cell="J43" data-formula='<?php echo $options['tf_tc_options_J43_formula']; ?>' data-format="$0,0"/>
+			
+			<input type="hidden" data-cell="G60" data-formula='<?php echo $options['tf_tc_options_G60_formula']; ?>' />
+			<input type="hidden" data-cell="G61" data-formula='<?php echo $options['tf_tc_options_G61_formula']; ?>' />
+			<input type="hidden" data-cell="G62" data-formula='<?php echo $options['tf_tc_options_G62_formula']; ?>' />
+			<input type="hidden" data-cell="G63" data-formula='<?php echo $options['tf_tc_options_G63_formula']; ?>' />
+			<input type="hidden" data-cell="G64" data-formula='<?php echo $options['tf_tc_options_G64_formula']; ?>' />
+			<input type="hidden" data-cell="G65" data-formula='<?php echo $options['tf_tc_options_G65_formula']; ?>' />
+			<input type="hidden" data-cell="G66" data-formula='<?php echo $options['tf_tc_options_G66_formula']; ?>' />
+			<input type="hidden" data-cell="G67" data-formula='<?php echo $options['tf_tc_options_G67_formula']; ?>' />
+			
+			<input type="hidden" data-cell="H60" data-formula='<?php echo $options['tf_tc_options_H60_formula']; ?>' />
+			<input type="hidden" data-cell="I60" data-formula='<?php echo $options['tf_tc_options_I60_formula']; ?>' />
+			<input type="hidden" data-cell="H61" data-formula='<?php echo $options['tf_tc_options_H61_formula']; ?>' />
+			<input type="hidden" data-cell="H62" data-formula='<?php echo $options['tf_tc_options_H62_formula']; ?>' />
+			<input type="hidden" data-cell="H63" data-formula='<?php echo $options['tf_tc_options_H63_formula']; ?>' />
+			<input type="hidden" data-cell="H64" data-formula='<?php echo $options['tf_tc_options_H64_formula']; ?>' />
+			<input type="hidden" data-cell="H65" data-formula='<?php echo $options['tf_tc_options_H65_formula']; ?>' />
+			<input type="hidden" data-cell="H66" data-formula='<?php echo $options['tf_tc_options_H66_formula']; ?>' />
+			<input type="hidden" data-cell="H67" data-formula='<?php echo $options['tf_tc_options_H67_formula']; ?>' />
+			
+			<input type="hidden" data-cell="M73" data-formula='<?php echo $options['tf_tc_options_M73_formula']; ?>' data-format="$0,0"/>
+			<input type="hidden" data-cell="M74" data-formula='<?php echo $options['tf_tc_options_M74_formula']; ?>' data-format="$0,0"/>
+			<input type="hidden" data-cell="M75" data-formula='<?php echo $options['tf_tc_options_M75_formula']; ?>' data-format="$0,0"/>
+			<input type="hidden" data-cell="M76" data-formula='<?php echo $options['tf_tc_options_M76_formula']; ?>' data-format="$0,0"/>
+			
+			<input type="hidden" data-cell="O74" data-formula='<?php echo $options['tf_tc_options_O74_formula']; ?>' data-format="$0,0"/>
+			<input type="hidden" data-cell="O75" data-formula='<?php echo $options['tf_tc_options_O75_formula']; ?>' data-format="$0,0"/>
+			<input type="hidden" data-cell="O76" data-formula='<?php echo $options['tf_tc_options_O76_formula']; ?>' data-format="$0,0"/>
+			
+			<input type="hidden" data-cell="Q73" data-formula='<?php echo $options['tf_tc_options_Q73_formula']; ?>'/>
+			<input type="hidden" data-cell="Q74" data-formula='<?php echo $options['tf_tc_options_Q74_formula']; ?>'/>
+			<input type="hidden" data-cell="Q75" data-formula='<?php echo $options['tf_tc_options_Q75_formula']; ?>'/>
+			<input type="hidden" data-cell="Q76" data-formula='<?php echo $options['tf_tc_options_Q76_formula']; ?>'/>
+
+			<input type="hidden" data-cell="S73" data-formula='<?php echo $options['tf_tc_options_S73_formula']; ?>' />
+			<input type="hidden" data-cell="S74" data-formula='<?php echo $options['tf_tc_options_S74_formula']; ?>' />
+			<input type="hidden" data-cell="S75" data-formula='<?php echo $options['tf_tc_options_S75_formula']; ?>' />
+			<input type="hidden" data-cell="S76" data-formula='<?php echo $options['tf_tc_options_S76_formula']; ?>' />
+			<input type="hidden" data-cell="S77" data-formula='<?php echo $options['tf_tc_options_S77_formula']; ?>'/>
+			
+			<input type="hidden" data-cell="V73" data-formula='<?php echo $options['tf_tc_options_V73_formula']; ?>' />
+			<input type="hidden" data-cell="V74" data-formula='<?php echo $options['tf_tc_options_V74_formula']; ?>' />
+			<input type="hidden" data-cell="V75" data-formula='<?php echo $options['tf_tc_options_V75_formula']; ?>' />
+			<input type="hidden" data-cell="V76" data-formula='<?php echo $options['tf_tc_options_V76_formula']; ?>' />
+			<input type="hidden" data-cell="V77" data-formula='<?php echo $options['tf_tc_options_V77_formula']; ?>' />
+			
+			<input type="hidden" data-cell="X73" data-formula='<?php echo $options['tf_tc_options_X73_formula']; ?>' />
+			<input type="hidden" data-cell="X74" data-formula='<?php echo $options['tf_tc_options_X74_formula']; ?>' />
+			<input type="hidden" data-cell="X75" data-formula='<?php echo $options['tf_tc_options_X75_formula']; ?>' />
+			<input type="hidden" data-cell="X76" data-formula='<?php echo $options['tf_tc_options_X76_formula']; ?>' />
+			<input type="hidden" data-cell="X77" data-formula='<?php echo $options['tf_tc_options_X77_formula']; ?>' />
+			
+			<input type="hidden" data-cell="Z73" data-formula='<?php echo $options['tf_tc_options_Z73_formula']; ?>' />
+			<input type="hidden" data-cell="Z74" data-formula='<?php echo $options['tf_tc_options_Z74_formula']; ?>' />
+			<input type="hidden" data-cell="Z75" data-formula='<?php echo $options['tf_tc_options_Z75_formula']; ?>' />
+			<input type="hidden" data-cell="Z76" data-formula='<?php echo $options['tf_tc_options_Z76_formula']; ?>' />
+			<input type="hidden" data-cell="Z77" data-formula='<?php echo $options['tf_tc_options_Z77_formula']; ?>' />
+			
+			<input type="hidden" data-cell="AC73" data-formula='<?php echo $options['tf_tc_options_AC73_formula']; ?>' />
+			<input type="hidden" data-cell="AC74" data-formula='<?php echo $options['tf_tc_options_AC74_formula']; ?>' />
+			<input type="hidden" data-cell="AC75" data-formula='<?php echo $options['tf_tc_options_AC75_formula']; ?>' />
+			<input type="hidden" data-cell="AC76" data-formula='<?php echo $options['tf_tc_options_AC76_formula']; ?>' />
+			<input type="hidden" data-cell="AC77" data-formula='<?php echo $options['tf_tc_options_AC77_formula']; ?>' />
+			
+			<input type="hidden" data-cell="AH73" data-formula='<?php echo $options['tf_tc_options_AH73_formula']; ?>' />
+			<input type="hidden" data-cell="AH74" data-formula='<?php echo $options['tf_tc_options_AH74_formula']; ?>' />
+			<input type="hidden" data-cell="AH75" data-formula='<?php echo $options['tf_tc_options_AH75_formula']; ?>' />
+			<input type="hidden" data-cell="AH76" data-formula='<?php echo $options['tf_tc_options_AH76_formula']; ?>' />
+			<input type="hidden" data-cell="AH77" data-formula='<?php echo $options['tf_tc_options_AH77_formula']; ?>' />
+			
+			<input type="hidden" data-cell="M81" data-formula='<?php echo $options['tf_tc_options_M81_formula']; ?>' />
+			<input type="hidden" data-cell="M82" data-formula='<?php echo $options['tf_tc_options_M82_formula']; ?>' />
+			<input type="hidden" data-cell="M83" data-formula='<?php echo $options['tf_tc_options_M83_formula']; ?>' />
+			<input type="hidden" data-cell="M84" data-formula='<?php echo $options['tf_tc_options_M84_formula']; ?>' />
+			<input type="hidden" data-cell="M85" data-formula='<?php echo $options['tf_tc_options_M85_formula']; ?>' />
+			<input type="hidden" data-cell="M99" data-formula='<?php echo $options['tf_tc_options_M99_formula']; ?>' />
+			<input type="hidden" data-cell="M100" data-formula='<?php echo $options['tf_tc_options_M100_formula']; ?>' />
+			<input type="hidden" data-cell="M101" data-formula='<?php echo $options['tf_tc_options_M101_formula']; ?>' />
+			
+			<input type="hidden" data-cell="T81" data-formula='<?php echo $options['tf_tc_options_T81_formula']; ?>' />
+			<input type="hidden" data-cell="T82" data-formula='<?php echo $options['tf_tc_options_T82_formula']; ?>' />
+			<input type="hidden" data-cell="T83" data-formula='<?php echo $options['tf_tc_options_T83_formula']; ?>' />
+			<input type="hidden" data-cell="T84" data-formula='<?php echo $options['tf_tc_options_T84_formula']; ?>' />
+			<input type="hidden" data-cell="T85" data-formula='<?php echo $options['tf_tc_options_T85_formula']; ?>' />
+			<input type="hidden" data-cell="T87" data-formula='<?php echo $options['tf_tc_options_T87_formula']; ?>' />
+			<input type="hidden" data-cell="T88" data-formula='<?php echo $options['tf_tc_options_T88_formula']; ?>' />
+			<input type="hidden" data-cell="T89" data-formula='<?php echo $options['tf_tc_options_T89_formula']; ?>' />
+			<input type="hidden" data-cell="T99" data-formula='<?php echo $options['tf_tc_options_T99_formula']; ?>' />
+			<input type="hidden" data-cell="T100" data-formula='<?php echo $options['tf_tc_options_T100_formula']; ?>' />
+			<input type="hidden" data-cell="T101" data-formula='<?php echo $options['tf_tc_options_T101_formula']; ?>' />
+			
+			<input type="hidden" data-cell="AA81" data-formula='<?php echo $options['tf_tc_options_AA81_formula']; ?>' />
+			<input type="hidden" data-cell="AA82" data-formula='<?php echo $options['tf_tc_options_AA82_formula']; ?>' />
+			<input type="hidden" data-cell="AA83" data-formula='<?php echo $options['tf_tc_options_AA83_formula']; ?>' />
+			<input type="hidden" data-cell="AA84" data-formula='<?php echo $options['tf_tc_options_AA84_formula']; ?>' />
+			<input type="hidden" data-cell="AA85" data-formula='<?php echo $options['tf_tc_options_AA85_formula']; ?>' />
+			<input type="hidden" data-cell="AA87" data-formula='<?php echo $options['tf_tc_options_AA87_formula']; ?>' />
+			<input type="hidden" data-cell="AA88" data-formula='<?php echo $options['tf_tc_options_AA88_formula']; ?>' />
+			<input type="hidden" data-cell="AA89" data-formula='<?php echo $options['tf_tc_options_AA89_formula']; ?>' />
+			<input type="hidden" data-cell="AA91" data-formula='<?php echo $options['tf_tc_options_AA91_formula']; ?>' />
+			<input type="hidden" data-cell="AA92" data-formula='<?php echo $options['tf_tc_options_AA92_formula']; ?>' />
+			<input type="hidden" data-cell="AA93" data-formula='<?php echo $options['tf_tc_options_AA93_formula']; ?>' />
+			<input type="hidden" data-cell="AA95" data-formula='<?php echo $options['tf_tc_options_AA95_formula']; ?>' />
+			<input type="hidden" data-cell="AA96" data-formula='<?php echo $options['tf_tc_options_AA96_formula']; ?>' />
+			<input type="hidden" data-cell="AA97" data-formula='<?php echo $options['tf_tc_options_AA97_formula']; ?>' />
+			<input type="hidden" data-cell="AA99" data-formula='<?php echo $options['tf_tc_options_AA99_formula']; ?>' />
+			<input type="hidden" data-cell="AA100" data-formula='<?php echo $options['tf_tc_options_AA100_formula']; ?>' />
+			<input type="hidden" data-cell="AA101" data-formula='<?php echo $options['tf_tc_options_AA101_formula']; ?>' />
+			
+			<input type="hidden" data-cell="AK81" data-formula='<?php echo $options['tf_tc_options_AK81_formula']; ?>' />
+			<input type="hidden" data-cell="AK82" data-formula='<?php echo $options['tf_tc_options_AK82_formula']; ?>' />
+			<input type="hidden" data-cell="AK83" data-formula='<?php echo $options['tf_tc_options_AK83_formula']; ?>' />
+			<input type="hidden" data-cell="AK84" data-formula='<?php echo $options['tf_tc_options_AK84_formula']; ?>' />
+			<input type="hidden" data-cell="AK85" data-formula='<?php echo $options['tf_tc_options_AK85_formula']; ?>' />
+			<input type="hidden" data-cell="AK87" data-formula='<?php echo $options['tf_tc_options_AK87_formula']; ?>' />
+			<input type="hidden" data-cell="AK88" data-formula='<?php echo $options['tf_tc_options_AK88_formula']; ?>' />
+			<input type="hidden" data-cell="AK89" data-formula='<?php echo $options['tf_tc_options_AK89_formula']; ?>' />
+			<input type="hidden" data-cell="AK91" data-formula='<?php echo $options['tf_tc_options_AK91_formula']; ?>' />
+			<input type="hidden" data-cell="AK92" data-formula='<?php echo $options['tf_tc_options_AK92_formula']; ?>' />
+			<input type="hidden" data-cell="AK93" data-formula='<?php echo $options['tf_tc_options_AK93_formula']; ?>' />
+			<input type="hidden" data-cell="AK95" data-formula='<?php echo $options['tf_tc_options_AK95_formula']; ?>' />
+			<input type="hidden" data-cell="AK96" data-formula='<?php echo $options['tf_tc_options_AK96_formula']; ?>' />
+			<input type="hidden" data-cell="AK97" data-formula='<?php echo $options['tf_tc_options_AK97_formula']; ?>' />
+			<input type="hidden" data-cell="AK99" data-formula='<?php echo $options['tf_tc_options_AK99_formula']; ?>' />
+			<input type="hidden" data-cell="AK100" data-formula='<?php echo $options['tf_tc_options_AK100_formula']; ?>' />
+			<input type="hidden" data-cell="AK101" data-formula='<?php echo $options['tf_tc_options_AK101_formula']; ?>' />
+			
+		</table>
+
+		<div class="charts" style="clear:both;text-align:center">
+			<canvas id="tfChartTwo" width="350" height="350" style="display:none;"></canvas>
+			<canvas id="tfChartThree" width="350" height="350" style="display:none;"></canvas>
+
+		</div>
+
+		</form>
+	<?php } else {  ?>
+		<div class="tf-calc-warning">
+			<p>Please ensure you have saved your Tax Calculator settings <a href="<?php echo '/wp-admin/admin.php?page=tf_tc_options'; ?>">here</a></p>
+		</div>
+	<?php } ?>
+		
+
+
+		<?php 
+		return ob_get_clean();
+		
 	}
 /**
 	 * Returns the running object
@@ -509,35 +1064,58 @@ class TF_Tax_Calc {
 	}
 	public function tf_tc_admin_enqueue_scripts($hook){
 		global $my_admin_page, $pagenow;
-
 		$options = get_option($this->key);
+		$options_page = array( 'tf_tc_options','tf_tc_simple_options');
+		$the_page = isset($_GET['page']) ? $_GET['page'] : '';
 		
-		// Css rules for Color Picker
-			wp_enqueue_style( 'wp-color-picker' );
-		
-		if ( $hook != "toplevel_page_tf_tc_options" ) {
-			return;
-		} else {
+
+		if ( in_array($the_page,$options_page )) {
 			wp_enqueue_script( 'jquery' );
+			wp_enqueue_style( 'wp-color-picker' );
 			wp_enqueue_script( 'tf-tc-numeral', plugins_url('js/js/numeral.min.js', __FILE__), array('jquery'), false, true );
 			wp_enqueue_script( 'tf-tc-calx', plugins_url('js/jquery-calx-2.2.6.js', __FILE__), array('jquery'), false, true );
 			wp_enqueue_script( 'tf-cust-script', plugins_url('js/tf_tc_admin_script.js', __FILE__), array('jquery', 'wp-color-picker'), false, true );
-			
-			
 		}
+
 	}
+	public function tf_tc_get_url_by_shortcode($shortcode) {
+		global $wpdb;
+
+		$url = '';
+
+		$sql = 'SELECT ID
+			FROM ' . $wpdb->posts . '
+			WHERE
+				post_type = "page"
+				AND post_status="publish"
+				AND post_content LIKE "%' . $shortcode . '%"';
+
+		if ($id = $wpdb->get_var($sql)) {
+			$url = get_permalink($id);
+		}
+
+		return $url;
+	}
+	
 	/**
 	 * Register our setting to WP
 	 * @since  0.1.0
 	 */
 	public function init() {
 		register_setting( $this->key, $this->key );
-
+		register_setting( $this->subkey, $this->subkey );
+		//main
 		add_settings_section(
 			'tf_tc_options_section', 
 			__( 'TerraFunds Tax Calculator Settings', 'wc-catc' ), 
 			array( $this, 'tf_tc_options_section_callback'), 
 			$this->key
+		);
+		add_settings_section(
+			'tf_tc_options_simple_section',
+			__( 'TerraFunds Simple Tax Calculator Settings', 'wc-catc'),
+			array( $this, 'tf_tc_simple_options_section_callback'),
+			$this->subkey
 		);
 		
 	}
@@ -559,9 +1137,19 @@ class TF_Tax_Calc {
 	 * @since  0.1.0
 	 */
 	public function tf_tc_options_section_callback(  ) { 
-
+		$shortcode = '[terra_calc]';
 		echo '<p>Adjust the labels and constants for the calculator.</p>';
-		echo '<p>edit the style of the front-end display <a href="/wp-admin/plugin-editor.php?file=terrafunds-tax-calculator/css/tf_tc_styles.css&plugin=terrafunds-tax-calculator/tftc.php">here</a>, make sure to save changes first.</p>';
+		echo '<p>edit the style of the front-end display <a href="/wp-admin/plugin-editor.php?file=terrafunds-tax-calculator/css/tf_tc_styles.css&plugin=terrafunds-tax-calculator/tftc.php">here</a>, make sure to save changes first.</p><p>View Page with Tax Calculator here: <a href="' . $this->tf_tc_get_url_by_shortcode($shortcode) .'" target="_blank">View Page</a></p>';
+
+	}
+	/**
+	 * Register our simple settings description to WP
+	 * @since  0.1.0
+	 */
+	public function tf_tc_simple_options_section_callback(  ) { 
+		$shortcode = '[terra_calc_simple]';
+		echo '<p>Adjust the labels and constants for the calculator.</p>';
+		echo '<p>edit the style of the front-end display <a href="/wp-admin/plugin-editor.php?file=terrafunds-tax-calculator/css/tf_tc_styles.css&plugin=terrafunds-tax-calculator/tftc.php">here</a>, make sure to save changes first.</p><p>View Page with Simple Tax Calculator here: <a href="' . $this->tf_tc_get_url_by_shortcode($shortcode) .'" target="_blank">View Page</a></p>';
 
 	}
 		/**
@@ -571,14 +1159,18 @@ class TF_Tax_Calc {
 	public function add_options_page() {
 		global $my_admin_page;
 		$my_admin_page = add_menu_page( $this->title, $this->title, 'manage_options', $this->key, array( $this, 'admin_page_display' ) );
+		add_submenu_page( $this->key, $this->sub_title, $this->sub_title, 'manage_options', $this->subkey, array( $this, 'simple_admin_page_display' ) );
 	}
+	
 	/**
 	 * Admin page markup.
 	 * @since  0.1.0
 	 */
 	public function admin_page_display() {
 		$options = get_option($this->key);
-		
+		// echo '<pre>';
+		// print_r($options);
+		// echo '</pre>';
 		if(isset($_POST['example_plugin_reset'])) {
 				check_admin_referer('example-plugin-reset', 'example-plugin-reset-nonce');
 				delete_option($this->key);
@@ -594,12 +1186,15 @@ class TF_Tax_Calc {
 		<div class="wrap tf_tc-options-page <?php echo $this->key; ?>">
 			<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
 
-				<form action='options.php' method='post' class="tf_admin_form">
+				<form action='options.php' method='post' class="tf_admin_form" id="calc_form">
 					<?php settings_fields( $this->key ); ?>
 					<?php do_settings_sections( $this->key ); ?>
 					<div>
 						<label>Label For Calculator Inputs<br/>
 							<input type="text" name="tf_tc_options[tf_tc_options_calculator_title]" value="<?php echo  isset($options['tf_tc_options_calculator_title']) ? $options['tf_tc_options_calculator_title'] : 'Calculator Inputs'; ?>"/>
+						</label>
+						<label>Label For Input Options<br/>
+							<input type="text" name="tf_tc_options[tf_tc_options_slim_calculator_title]" value="<?php echo  isset($options['tf_tc_options_slim_calculator_title']) ? $options['tf_tc_options_slim_calculator_title'] : 'Input Options'; ?>"/>
 						</label>
 					</div>
 					<div>
@@ -650,14 +1245,67 @@ class TF_Tax_Calc {
 							</td>
 							<td><label>D8</label>
 								<select data-cell="D8" name="tf_tc_options[tf_tc_options_D8]" style="width:100%;text-align:center;text-align-last:center;" class="prov_sel">
-									<option value="BC" selected="selected">BC</option>
-									<option value="AB">AB</option>
-									<option value="SK">SK</option>
-									<option value="MB">MB</option>
-									<option value="ON">ON</option>
-									<option value="QC">QC</option>
-									<option value="NS">NS</option>
+									<?php if ('' !== $options['tf_tc_options_d8_select_1']) { ?>
+											<option value='<?php echo isset($options[$this->key . '_d8_select_1']) ? $options[$this->key . '_d8_select_1'] : 'BC'; ?>' selected="selected"><?php echo isset($options[$this->key . '_d8_select_1']) ? $options[$this->key . '_d8_select_1'] : 'BC'; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_2']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_2']) ? $options[$this->key . '_d8_select_2'] : 'AB'; ?>"><?php echo isset($options[$this->key . '_d8_select_2']) ? $options[$this->key . '_d8_select_2'] : 'AB'; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_3']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_3']) ? $options[$this->key . '_d8_select_3'] : 'SK'; ?>"><?php echo isset($options[$this->key . '_d8_select_3']) ? $options[$this->key . '_d8_select_3'] : 'SK'; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_4']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_4']) ? $options[$this->key . '_d8_select_4'] : 'MB'; ?>"><?php echo isset($options[$this->key . '_d8_select_4']) ? $options[$this->key . '_d8_select_4'] : 'MB'; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_5']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_5']) ? $options[$this->key . '_d8_select_5'] : 'ON'; ?>"><?php echo isset($options[$this->key . '_d8_select_5']) ? $options[$this->key . '_d8_select_5'] : 'ON'; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_6']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_6']) ? $options[$this->key . '_d8_select_6'] : 'QC'; ?>"><?php echo isset($options[$this->key . '_d8_select_6']) ? $options[$this->key . '_d8_select_6'] : 'QC'; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_7']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_7']) ? $options[$this->key . '_d8_select_7'] : 'NS'; ?>"><?php echo isset($options[$this->key . '_d8_select_7']) ? $options[$this->key . '_d8_select_7'] : 'NS'; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_8']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_8']) ? $options[$this->key . '_d8_select_8'] : ''; ?>"><?php echo isset($options[$this->key . '_d8_select_8']) ? $options[$this->key . '_d8_select_8'] : ''; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_9']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_9']) ? $options[$this->key . '_d8_select_9'] : ''; ?>"><?php echo isset($options[$this->key . '_d8_select_9']) ? $options[$this->key . '_d8_select_9'] : ''; ?></option>
+									<?php }
+										  if ('' !== $options['tf_tc_options_d8_select_10']){ ?>
+											<option value="<?php echo isset($options[$this->key . '_d8_select_10']) ? $options[$this->key . '_d8_select_10'] : ''; ?>"><?php echo isset($options[$this->key . '_d8_select_10']) ? $options[$this->key . '_d8_select_10'] : ''; ?></option>
+									<?php } ?>
 								</select>
+							</td>
+							<td>
+								<input type="text" class="H5" name="tf_tc_options[tf_tc_options_d8_select_1]" value='<?php echo isset($options[$this->key . '_d8_select_1']) ? $options[$this->key . '_d8_select_1'] : 'BC'; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="I5" name="tf_tc_options[tf_tc_options_d8_select_2]" value='<?php echo isset($options[$this->key . '_d8_select_2']) ? $options[$this->key . '_d8_select_2'] : 'AB'; ?>'/>
+							</td>							
+							<td>
+								<input type="text" class="J5" name="tf_tc_options[tf_tc_options_d8_select_3]" value='<?php echo isset($options[$this->key . '_d8_select_3']) ? $options[$this->key . '_d8_select_3'] : 'SK'; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="K5" name="tf_tc_options[tf_tc_options_d8_select_4]" value='<?php echo isset($options['tf_tc_options_d8_select_4']) ? $options[$this->key . '_d8_select_4'] : 'MB'; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="L5" name="tf_tc_options[tf_tc_options_d8_select_5]" value='<?php echo isset($options['tf_tc_options_d8_select_5']) ? $options[$this->key . '_d8_select_5'] : 'ON'; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="M5" name="tf_tc_options[tf_tc_options_d8_select_6]" value='<?php echo isset($options[$this->key . '_d8_select_6']) ? $options[$this->key . '_d8_select_6'] : 'QC'; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="N5" name="tf_tc_options[tf_tc_options_d8_select_7]" value='<?php echo isset($options[$this->key . '_d8_select_7']) ? $options[$this->key . '_d8_select_7'] : 'NS'; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="O5" name="tf_tc_options[tf_tc_options_d8_select_8]" value='<?php echo isset($options[$this->key . '_d8_select_8']) ? $options[$this->key . '_d8_select_8'] : ''; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="P5" name="tf_tc_options[tf_tc_options_d8_select_9]" value='<?php echo isset($options[$this->key . '_d8_select_9']) ? $options[$this->key . '_d8_select_9'] : ''; ?>'/>
+							</td>
+							<td>
+								<input type="text" class="Q5" name="tf_tc_options[tf_tc_options_d8_select_10]" value='<?php echo isset($options[$this->key . '_d8_select_10']) ? $options[$this->key . '_d8_select_10'] : ''; ?>'/>
 							</td>
 						</tr>
 						<tr>
@@ -700,10 +1348,33 @@ class TF_Tax_Calc {
 							</td>
 							<td><label>D18</label>
 								<select class="d18" data-cell="D18" name="tf_tc_options[tf_tc_options_contribute_selection]" style="width:100%;text-align:center;text-align-last:center;">
-									<option value="NO"  selected="selected">No</option>
-									<option value="YES - Contribute to RRSP">Yes - Contribute to RRSP</option>
-									<option value="YES - Donate">Yes - Donate</option>
+							<?php 
+								if ('' !== $options[$this->key . '_contribute_select_1']){ ?>
+									<option value="<?php echo isset($options[$this->key . '_contribute_select_1']) ? $options[$this->key . '_contribute_select_1'] : 'NO'; ?>" selected="selected"><?php echo $options[$this->key . '_contribute_select_1']; ?></option>
+							<?php }
+								if ('' !== $options[$this->key . '_contribute_select_2']){ ?>
+									<option value="<?php echo isset($options[$this->key . '_contribute_select_2']) ? $options[$this->key . '_contribute_select_2'] : 'YES - Reinvest'; ?>"><?php echo $options[$this->key . '_contribute_select_2']; ?></option>
+							<?php }
+								if ('' !== $options[$this->key . '_contribute_select_3']){ ?>
+									<option value="<?php echo isset($options[$this->key . '_contribute_select_3']) ? $options[$this->key . '_contribute_select_3'] : 'YES - Contribute to RRSP'; ?>"><?php echo $options[$this->key . '_contribute_select_3']; ?></option>
+							<?php }
+								if ('' !== $options[$this->key . '_contribute_select_4']){ ?>
+									<option value="<?php echo isset($options[$this->key . '_contribute_select_4']) ? $options[$this->key . '_contribute_select_4'] : 'YES - Donate'; ?>"><?php echo $options[$this->key . '_contribute_select_4']; ?></option>
+							<?php } ?>
+
 								</select>	
+							</td>
+							<td>
+								<input type="text" class="H6" value="<?php echo isset($options[$this->key . '_contribute_select_1']) ? $options[$this->key . '_contribute_select_1'] : 'NO'; ?>" name="tf_tc_options[tf_tc_options_contribute_select_1]"/>
+							</td>
+							<td>
+								<input type="text" class="I6" value="<?php echo isset($options[$this->key . '_contribute_select_2']) ? $options[$this->key . '_contribute_select_2'] : 'YES - Reinvest'; ?>" name="tf_tc_options[tf_tc_options_contribute_select_2]"/>
+							</td>
+							<td>
+								<input type="text" class="J6" value="<?php echo isset($options[$this->key . '_contribute_select_3']) ? $options[$this->key . '_contribute_select_3'] : 'YES - Contribute to RRSP'; ?>" name="tf_tc_options[tf_tc_options_contribute_select_3]"/>
+							</td>
+							<td>
+								<input type="text" class="K6" value="<?php echo isset($options[$this->key . '_contribute_select_4']) ? $options[$this->key . '_contribute_select_4'] : 'YES - Donate'; ?>" name="tf_tc_options[tf_tc_options_contribute_select_4]"/>
 							</td>
 						</tr>
 						<tr>
@@ -727,7 +1398,16 @@ class TF_Tax_Calc {
 							<td><label>D22</label><br/>
 								<input type="text" data-cell="D22" class="d22" value="75" data-format="0%">
 							</td>
-						</tr>						
+						</tr>
+<tr>
+							<td>
+								<label>D23:  Step 8 Label</label>
+								
+								<input type="text" name="tf_tc_options[tf_tc_options_step_8_label]" value="<?php echo isset($options['tf_tc_options_step_8_label']) ? $options['tf_tc_options_step_8_label'] : 'Maximum % of taxable income to invest'; ?>"/>
+							</td>
+							<td>
+							</td>
+						</tr>								
 					</table>
 					<!-- Table 1 working -->
 					<table class="form-table tax-table-2">
@@ -947,7 +1627,7 @@ class TF_Tax_Calc {
 						<td><label>E53</label><br/><input class="FE53" name="tf_tc_options[tf_tc_options_E53_formula]" value='<?php echo isset($options["tf_tc_options_E53_formula"]) ? $options["tf_tc_options_E53_formula"] : 'IF(E36<=0," ",IF(G61<5000," ",IF(D18="NO","-",IF(D18="YES - Contribute to RRSP",IF(H59="Insufficient income",0,I60*H62*D22),IF(AND(E36>=202801,D18="YES - Donate"),IF(D8="BC",I60*O28*D22,IF(D8="AB",I60*O29*D22,IF(D8="SK",I60*O30*D22,IF(D8="MB",I60*O31*D22,IF(D8="ON",I60*O32*D22,IF(D8="QC",I60*O33*D22,IF(D8="NS",I60*O34*D22))))))),IF(D8="BC",I60*K28*D22,IF(D8="AB",I60*K29*D22,IF(D8="SK",I60*K30*D22,IF(D8="MB",I60*K31*D22,IF(D8="ON",I60*K32*D22,IF(D8="QC",I60*K33*D22,IF(D8="NS",I60*K34*D22))))))))))))' ?>'/><br/><input type="text" data-cell="E53"/></td>
 					</tr>
 					<tr>
-						<td><label>B54</label><br/><input class="FB54" name="tf_tc_options[tf_tc_options_B54_formula]" value='IF(D18="YES - Contribute to RRSP","CG Tax on transfer",IF(D18="YES - Donate","CG Tax on Donation", "        -"))'/><br/><input data-cell="B54" /></td>
+						<td><label>B54</label><br/><input class="FB54" name="tf_tc_options[tf_tc_options_B54_formula]" value='<?php echo isset($options['tf_tc_options_B54_formula']) ? $options['tf_tc_options_B54_formula'] : 'IF(D18="YES - Contribute to RRSP","CG Tax on transfer",IF(D18="YES - Donate","CG Tax on Donation", "        -"))'; ?>'/><br/><input data-cell="B54" /></td>
 						<td><label>C54</label><br/><input class="FC54" name="tf_tc_options[tf_tc_options_C54_formula]" value='<?php echo isset($options["tf_tc_options_C54_formula"]) ? $options["tf_tc_options_C54_formula"] : 'IF(D18="NO","-",IF(D20="YES",0,IF(D18="YES - Contribute to RRSP",IF(F43="Insufficient income","-",1000*D22*0.5*C49*-1),IF(D18="YES - Donate",IF(F43="Insufficient income","-",1000*D22*0.5*C49*-1),0))))' ?>'/><br/><input type="text" data-cell="C54"/></td>
 						<td><label>D54</label><br/><input class="FD54" name="tf_tc_options[tf_tc_options_D54_formula]" value='<?php echo isset($options["tf_tc_options_D54_formula"]) ? $options["tf_tc_options_D54_formula"] : 'IF(D18="NO","-",IF(D20="YES",0,IF(D18="YES - Contribute to RRSP",IF(G43="Insufficient income","-",5000*D22*0.5*D49*-1),IF(D18="YES - Donate",IF(G43="Insufficient income","-",5000*D22*0.5*D49*-1),0))))' ?>'/><br/><input type="text" data-cell="D54"/></td>
 						<td><label>E54</label><br/><input class="FE54" name="tf_tc_options[tf_tc_options_E54_formula]" value='<?php echo isset($options["tf_tc_options_E54_formula"]) ? $options["tf_tc_options_E54_formula"] : 'IF(E36<=0," ",IF(G61<5000," ",IF(D18="NO","-",IF(D18="NO"," ",IF(D20="YES",0,IF(D18="YES - Contribute to RRSP",IF(G61<5000," ",IF(H59="Insufficient income",0,I60*D22*0.5*H62*-1)),IF(D18="YES - Donate",IF(D48<5000," ",IF(H59="Insufficient income",0,I60*D22*0.5*H62*-1)),0)))))))' ?>'/><br/><input type="text" data-cell="E54"/></td>
@@ -1300,7 +1980,554 @@ class TF_Tax_Calc {
 		</div>
 		<?php
 	}
-	
+	public function simple_admin_page_display(){
+		$subkey = $this->subkey;
+		$options = get_option($subkey);
+		if(isset($_POST['simple_plugin_reset'])) {
+				check_admin_referer('simple-plugin-reset', 'simple-plugin-reset-nonce');
+				delete_option($subkey);
+		?>
+				<div class="updated">
+					<p><?php _e('All options have been restored to their default values.', 'simple-plugin'); ?></p>
+				</div>
+		<?php } ?>
+		<style>
+		td { border: 1px solid #ccc; }
+		.submit input#submit.button-primary { position:fixed;bottom:5%;right:10%;}
+		</style>
+
+		<div class="wrap tf_tc-simple-options-page <?php echo $subkey; ?>">
+			<h2><?php echo esc_html( get_admin_page_title() ); ?></h2>
+		
+		<form action='options.php' method='post' class="tf_admin_form_simple"  id="calc_form">
+					<?php settings_fields( $subkey ); ?>
+					<?php do_settings_sections( $subkey ); ?>
+					<div>
+						<label>Label For Input Options<br/>
+							<input type="text" name="tf_tc_options[tf_tc_options_slim_calculator_title]" value="<?php echo  isset($options[$subkey . '_calculator_title']) ? $options[$subkey . '_calculator_title'] : 'Input Options'; ?>"/>
+						</label>
+					</div>
+			<table>
+				<tbody>
+					<tr>
+						<td><label data-cell="A2">Investment</label></td>
+						<td><input type="text" data-cell="B2" name="tf_tc_simple_options_investment" value="<?php echo isset($options[$subkey . '_investment']) ? $options[$subkey . '_investment'] : '1000'; ?>" data-format="$0,0"/></td>
+					</tr>
+					<tr>
+						<td><label data-cell="A3">FMV of RRSP Transfer or Donation</label></td>
+						<td><input type="text" data-cell="B3" name="tf_tc_simple_options_donation" value="<?php echo isset($options[$subkey . '_donation']) ? $options[$subkey . '_donation'] : '75'; ?>" data-format="0%"/></td>
+					</tr>
+					<tr>
+						<td><label data-cell="A4">Mining Tax Credit (Fed)</label></td>
+						<td><input type="text" data-cell="B4" name="tf_tc_simple_options_credit_fed" value="<?php echo isset($options[$subkey . '_credit_fed']) ? $options[$subkey . '_credit_fed'] : '15'; ?>" data-format="0%"/></td>
+					</tr>
+					<tr>
+						<td><label data-cell="A5">Mining - % of Investments</label></td>
+						<td><input type="text" data-cell="B5" name="tf_tc_simple_options_mining" value="<?php echo isset($options[$subkey . '_mining']) ? $options[$subkey . '_mining'] : '35'; ?>" data-format="0%"/></td>
+					</tr>
+					<tr>
+						<td><label data-cell="A6">Province</label></td>
+						<td><input type="text" data-cell="B6" name="tf_tc_simple_options_province_bc" value="<?php echo isset($options[$subkey . '_province_bc']) ? $options[$subkey . '_province_bc'] : 'BC'; ?>"/></td>
+						<td><input type="text" data-cell="C6" name="tf_tc_simple_options_province_ab" value="<?php echo isset($options[$subkey . '_province_ab']) ? $options[$subkey . '_province_ab'] : 'AB'; ?>"/></td>
+						<td><input type="text" data-cell="D6" name="tf_tc_simple_options_province_sk" value="<?php echo isset($options[$subkey . '_province_sk']) ? $options[$subkey . '_province_sk'] : 'SK'; ?>"/></td>
+						<td><input type="text" data-cell="E6" name="tf_tc_simple_options_province_mb" value="<?php echo isset($options[$subkey . '_province_mb']) ? $options[$subkey . '_province_mb'] : 'MB'; ?>"/></td>
+						<td><input type="text" data-cell="F6" name="tf_tc_simple_options_province_on" value="<?php echo isset($options[$subkey . '_province_on']) ? $options[$subkey . '_province_on'] : 'ON'; ?>"/></td>
+						<td><input type="text" data-cell="G6" name="tf_tc_simple_options_province_qc" value="<?php echo isset($options[$subkey . '_province_qc']) ? $options[$subkey . '_province_qc'] : 'QC'; ?>"/></td>
+						<td><input type="text" data-cell="H6" name="tf_tc_simple_options_province_ns" value="<?php echo isset($options[$subkey . '_province_ns']) ? $options[$subkey . '_province_ns'] : 'NS'; ?>"/></td>
+					</tr>
+					<tr>
+						<td><label data-cell="A7">Tax Rate (minimum)</label></td>
+						<td><input type="text" data-cell="B7" name="tf_tc_simple_options_taxratemin_bc" value="<?php echo isset($options[$subkey . '_taxratemin_bc']) ? $options[$subkey . '_taxratemin_bc'] : '47.7'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="C7" name="tf_tc_simple_options_taxratemin_ab" value="<?php echo isset($options[$subkey . '_taxratemin_ab']) ? $options[$subkey . '_taxratemin_ab'] : '48'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="D7" name="tf_tc_simple_options_taxratemin_sk" value="<?php echo isset($options[$subkey . '_taxratemin_sk']) ? $options[$subkey . '_taxratemin_sk'] : '47.75'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="E7" name="tf_tc_simple_options_taxratemin_mb" value="<?php echo isset($options[$subkey . '_taxratemin_mb']) ? $options[$subkey . '_taxratemin_mb'] : '50.40'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="F7" name="tf_tc_simple_options_taxratemin_on" value="<?php echo isset($options[$subkey . '_taxratemin_on']) ? $options[$subkey . '_taxratemin_on'] : '53.53'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="G7" name="tf_tc_simple_options_taxratemin_qc" value="<?php echo isset($options[$subkey . '_taxratemin_qc']) ? $options[$subkey . '_taxratemin_qc'] : '53.31'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="H7" name="tf_tc_simple_options_taxratemin_ns" value="<?php echo isset($options[$subkey . '_taxratemin_ns']) ? $options[$subkey . '_taxratemin_ns'] : '54'; ?>" data-format="0.00%"/></td>
+					</tr>
+					<tr>
+						<td><label data-cell="A8">Donation tax credit (maximum)</label></td>
+						<td><input type="text" data-cell="B8" name="tf_tc_simple_options_donationtaxcredit_bc" value="<?php echo isset($options[$subkey . '_donationtaxcredit_bc']) ? $options[$subkey . '_donationtaxcredit_bc'] : '47.7'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="C8" name="tf_tc_simple_options_donationtaxcredit_ab" value="<?php echo isset($options[$subkey . '_donationtaxcredit_ab']) ? $options[$subkey . '_donationtaxcredit_ab'] : '54'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="D8" name="tf_tc_simple_options_donationtaxcredit_sk" value="<?php echo isset($options[$subkey . '_donationtaxcredit_sk']) ? $options[$subkey . '_donationtaxcredit_sk'] : '47.75'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="E8" name="tf_tc_simple_options_donationtaxcredit_mb" value="<?php echo isset($options[$subkey . '_donationtaxcredit_mb']) ? $options[$subkey . '_donationtaxcredit_mb'] : '50.40'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="F8" name="tf_tc_simple_options_donationtaxcredit_on" value="<?php echo isset($options[$subkey . '_donationtaxcredit_on']) ? $options[$subkey . '_donationtaxcredit_on'] : '50.41'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="G8" name="tf_tc_simple_options_donationtaxcredit_qc" value="<?php echo isset($options[$subkey . '_donationtaxcredit_qc']) ? $options[$subkey . '_donationtaxcredit_qc'] : '51.56'; ?>" data-format="0.00%"/></td>
+						<td><input type="text" data-cell="H8" name="tf_tc_simple_options_donationtaxcredit_ns" value="<?php echo isset($options[$subkey . '_donationtaxcredit_ns']) ? $options[$subkey . '_donationtaxcredit_ns'] : '54'; ?>" data-format="0.00%"/></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td colspan="2">Terra LP</td>
+						<td></td>
+						<td colspan="2">LP + RRSP</td>
+						<td></td>
+						<td colspan="2">LP + Donation</td>
+						<td></td>
+						<td colspan="2">LP + RRSP + Cap Loss</td>
+						<td></td>
+						<td colspan="2">LP + Donation + Cap Loss</td>
+					</tr>
+					<tr>
+						<td></td>
+						<td>Tax Savings</td>
+						<td>Cash Outlay</td>
+						<td></td>
+						<td>Tax Savings</td>
+						<td>Cash Outlay</td>
+						<td></td>
+						<td>Tax Savings</td>
+						<td>Cash Outlay</td>
+						<td></td>
+						<td>Tax Savings</td>
+						<td>Cash Outlay</td>
+						<td></td>
+						<td>Tax Savings</td>
+						<td>Cash Outlay</td>
+					</tr>
+					<tr>
+						<td>BC</td>
+						<td>
+							<input type="text" data-cell="B12" name="tf_tc_simple_options_terra_taxsavings_bc" data-formula="<?php echo isset($options[$subkey . '_terra_taxsavings_bc_formula']) ? $options[$subkey . '_terra_taxsavings_bc_formula'] : 'B2*B7+B2*0.9*B5*B4*(1-B7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FB12" name="tf_tc_simple_options_terra_taxsavings_bc_formula" value="<?php echo isset($options[$subkey . '_terra_taxsavings_bc_formula']) ? $options[$subkey . '_terra_taxsavings_bc_formula'] : 'B2*B7+B2*0.9*B5*B4*(1-B7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="C12" name="tf_tc_simple_options_terra_cashoutlay_bc" data-formula="<?php echo isset($options[$subkey . '_terra_cashoutlay_bc_formula']) ? $options[$subkey . '_terra_cashoutlay_bc_formula'] : 'B2-B12'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FC12" name="tf_tc_simple_options_terra_cashoutlay_bc_formula" value="<?php echo isset($options[$subkey . '_terra_cashoutlay_bc_formula']) ? $options[$subkey . '_terra_cashoutlay_bc_formula'] : 'B2-B12'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="E12" name="tf_tc_simple_options_lprrsp_taxsavings_bc" data-formula="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_bc_formula']) ? $options[$subkey . '_lprrsp_taxsavings_bc_formula'] : 'B12+(B3*B2*B7)-(B3*B2*0.5*B7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FE12" name="tf_tc_simple_options_lprrsp_taxsavings_bc_formula" value="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_bc_formula']) ? $options[$subkey . '_lprrsp_taxsavings_bc_formula'] : 'B12+(B3*B2*B7)-(B3*B2*0.5*B7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="F12" name="tf_tc_simple_options_lprrsp_cashoutlay_bc" data-formula="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_bc_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_bc_formula'] : 'B2-E12'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FF12" name="tf_tc_simple_options_lprrsp_cashoutlay_bc_formula" value="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_bc_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_bc_formula'] : 'B2-E12'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="H12" name="tf_tc_simple_options_lpdonation_taxsavings_bc" data-formula="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_bc_formula']) ? $options[$subkey . '_lpdonation_taxsavings_bc_formula'] : 'B12+(B3*B2*B8)-(B3*B2*0.5*B7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FH12" name="tf_tc_simple_options_lpdonation_taxsavings_bc_formula" value="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_bc_formula']) ? $options[$subkey . '_lpdonation_taxsavings_bc_formula'] : 'B12+(B3*B2*B8)-(B3*B2*0.5*B7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="I12" name="tf_tc_simple_options_lpdonation_cashoutlay_bc" data-formula="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_bc_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_bc_formula'] : 'B2-H12'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FI12" name="tf_tc_simple_options_lpdonation_cashoutlay_bc_formula" value="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_bc_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_bc_formula'] : 'B2-H12'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="K12" name="tf_tc_simple_options_lprrspcaploss_taxsavings_bc" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_bc_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_bc_formula'] : 'B12+(B3*B2*B7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FK12" name="tf_tc_simple_options_lprrspcaploss_taxsavings_bc_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_bc_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_bc_formula'] : 'B12+(B3*B2*B7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="L12" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_bc" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_bc_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_bc_formula'] : 'B2-K12'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FL12" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_bc_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_bc_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_bc_formula'] : 'B2-K12'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="N12" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_bc" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_bc_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_bc_formula'] : 'B12+(B3*B2*B8)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FN12" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_bc_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_bc_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_bc_formula'] : 'B12+(B3*B2*B8)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="O12" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_bc" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_bc_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_bc_formula'] : 'B2-N12'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FO12" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_bc_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_bc_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_bc_formula'] : 'B2-N12'; ?>"/>
+						</td>
+					</tr>
+					<tr>
+						<td>AB</td>
+						<td>
+							<input type="text" data-cell="B13" name="tf_tc_simple_options_terra_taxsavings_ab" data-formula="<?php echo isset($options[$subkey . '_terra_taxsavings_ab_formula']) ? $options[$subkey . '_terra_taxsavings_ab_formula'] : 'B2*C7+B2*0.9*B5*B4*(1-C7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FB13" name="tf_tc_simple_options_terra_taxsavings_ab_formula" value="<?php echo isset($options[$subkey . '_terra_taxsavings_ab_formula']) ? $options[$subkey . '_terra_taxsavings_ab_formula'] : 'B2*C7+B2*0.9*B5*B4*(1-C7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="C13" name="tf_tc_simple_options_terra_cashoutlay_ab" data-formula="<?php echo isset($options[$subkey . '_terra_cashoutlay_ab_formula']) ? $options[$subkey . '_terra_cashoutlay_ab_formula'] : 'B2-B13'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FC13" name="tf_tc_simple_options_terra_cashoutlay_ab_formula" value="<?php echo isset($options[$subkey . '_terra_cashoutlay_ab_formula']) ? $options[$subkey . '_terra_cashoutlay_ab_formula'] : 'B2-B13'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="E13" name="tf_tc_simple_options_lprrsp_taxsavings_ab" data-formula="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_ab_formula']) ? $options[$subkey . '_lprrsp_taxsavings_ab_formula'] : 'B13+(B3*B2*C7)-(B3*B2*0.5*C7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FE13" name="tf_tc_simple_options_lprrsp_taxsavings_ab_formula" value="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_ab_formula']) ? $options[$subkey . '_lprrsp_taxsavings_ab_formula'] : 'B13+(B3*B2*C7)-(B3*B2*0.5*C7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="F13" name="tf_tc_simple_options_lprrsp_cashoutlay_ab" data-formula="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_ab_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_ab_formula'] : 'B2-E13'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FF13" name="tf_tc_simple_options_lprrsp_cashoutlay_ab_formula" value="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_ab_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_ab_formula'] : 'B2-E13'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="H13" name="tf_tc_simple_options_lpdonation_taxsavings_ab" data-formula="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_ab_formula']) ? $options[$subkey . '_lpdonation_taxsavings_ab_formula'] : 'B13+(B3*B2*C8)-(B3*B2*0.5*C7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FH13" name="tf_tc_simple_options_lpdonation_taxsavings_ab_formula" value="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_ab_formula']) ? $options[$subkey . '_lpdonation_taxsavings_ab_formula'] : 'B13+(B3*B2*C8)-(B3*B2*0.5*C7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="I13" name="tf_tc_simple_options_lpdonation_cashoutlay_ab" data-formula="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_ab_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_ab_formula'] : 'B2-H13'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FI13" name="tf_tc_simple_options_lpdonation_cashoutlay_ab_formula" value="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_ab_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_ab_formula'] : 'B2-H13'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="K13" name="tf_tc_simple_options_lprrspcaploss_taxsavings_ab" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_ab_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_ab_formula'] : 'B13+(B3*B2*C7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FK13" name="tf_tc_simple_options_lprrspcaploss_taxsavings_ab_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_ab_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_ab_formula'] : 'B13+(B3*B2*C7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="L13" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_ab" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_ab_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_ab_formula'] : 'B2-K13'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FL13" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_ab_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_ab_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_ab_formula'] : 'B2-K13'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="N13" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_ab" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_ab_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_ab_formula'] : 'B13+(B3*B2*C8)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FN13" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_ab_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_ab_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_ab_formula'] : 'B13+(B3*B2*C8)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="O13" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_ab" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_ab_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_ab_formula'] : 'B2-N13'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FO13" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_ab_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_ab_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_ab_formula'] : 'B2-N13'; ?>"/>
+						</td>
+					</tr>
+					<tr>
+						<td>SK</td>
+						<td>
+							<input type="text" data-cell="B14" name="tf_tc_simple_options_terra_taxsavings_sk" data-formula="<?php echo isset($options[$subkey . '_terra_taxsavings_sk_formula']) ? $options[$subkey . '_terra_taxsavings_sk_formula'] : 'B2*D7+B2*0.9*B5*B4*(1-D7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FB14" name="tf_tc_simple_options_terra_taxsavings_sk_formula" value="<?php echo isset($options[$subkey . '_terra_taxsavings_sk_formula']) ? $options[$subkey . '_terra_taxsavings_sk_formula'] : 'B2*D7+B2*0.9*B5*B4*(1-D7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="C14" name="tf_tc_simple_options_terra_cashoutlay_sk" data-formula="<?php echo isset($options[$subkey . '_terra_cashoutlay_sk_formula']) ? $options[$subkey . '_terra_cashoutlay_sk_formula'] : 'B2-B14'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FC14" name="tf_tc_simple_options_terra_cashoutlay_sk_formula" value="<?php echo isset($options[$subkey . '_terra_cashoutlay_sk_formula']) ? $options[$subkey . '_terra_cashoutlay_sk_formula'] : 'B2-B14'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="E14" name="tf_tc_simple_options_lprrsp_taxsavings_sk" data-formula="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_sk_formula']) ? $options[$subkey . '_lprrsp_taxsavings_sk_formula'] : 'B14+(B3*B2*D7)-(B3*B2*0.5*D7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FE14" name="tf_tc_simple_options_lprrsp_taxsavings_sk_formula" value="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_sk_formula']) ? $options[$subkey . '_lprrsp_taxsavings_sk_formula'] : 'B14+(B3*B2*D7)-(B3*B2*0.5*D7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="F14" name="tf_tc_simple_options_lprrsp_cashoutlay_sk" data-formula="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_sk_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_sk_formula'] : 'B2-E14'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FF14" name="tf_tc_simple_options_lprrsp_cashoutlay_sk_formula" value="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_sk_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_sk_formula'] : 'B2-E14'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="H14" name="tf_tc_simple_options_lpdonation_taxsavings_sk" data-formula="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_sk_formula']) ? $options[$subkey . '_lpdonation_taxsavings_sk_formula'] : 'B14+(B3*B2*D8)-(B3*B2*0.5*D7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FH14" name="tf_tc_simple_options_lpdonation_taxsavings_sk_formula" value="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_sk_formula']) ? $options[$subkey . '_lpdonation_taxsavings_sk_formula'] : 'B14+(B3*B2*D8)-(B3*B2*0.5*D7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="I14" name="tf_tc_simple_options_lpdonation_cashoutlay_sk" data-formula="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_sk_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_sk_formula'] : 'B2-H14'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FI14" name="tf_tc_simple_options_lpdonation_cashoutlay_sk_formula" value="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_sk_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_sk_formula'] : 'B2-H14'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="K14" name="tf_tc_simple_options_lprrspcaploss_taxsavings_sk" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_sk_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_sk_formula'] : 'B14+(B3*B2*D7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FK14" name="tf_tc_simple_options_lprrspcaploss_taxsavings_sk_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_sk_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_sk_formula'] : 'B14+(B3*B2*D7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="L14" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_sk" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_sk_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_sk_formula'] : 'B2-K14'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FL14" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_sk_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_sk_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_sk_formula'] : 'B2-K14'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="N14" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_sk" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_sk_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_sk_formula'] : 'B14+(B3*B2*D8)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FN14" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_sk_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_sk_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_sk_formula'] : 'B14+(B3*B2*D8)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="O14" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_sk" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_sk_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_sk_formula'] : 'B2-N14'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FO14" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_sk_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_sk_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_sk_formula'] : 'B2-N14'; ?>"/>
+						</td>
+					</tr>
+					<tr>
+						<td>MB</td>
+						<td>
+							<input type="text" data-cell="B15" name="tf_tc_simple_options_terra_taxsavings_mb" data-formula="<?php echo isset($options[$subkey . '_terra_taxsavings_mb_formula']) ? $options[$subkey . '_terra_taxsavings_mb_formula'] : 'B2*E7+B2*0.9*B5*B4*(1-E7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FB15" name="tf_tc_simple_options_terra_taxsavings_mb_formula" value="<?php echo isset($options[$subkey . '_terra_taxsavings_mb_formula']) ? $options[$subkey . '_terra_taxsavings_mb_formula'] : 'B2*E7+B2*0.9*B5*B4*(1-E7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="C15" name="tf_tc_simple_options_terra_cashoutlay_mb" data-formula="<?php echo isset($options[$subkey . '_terra_cashoutlay_mb_formula']) ? $options[$subkey . '_terra_cashoutlay_mb_formula'] : 'B2-B15'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FC15" name="tf_tc_simple_options_terra_cashoutlay_mb_formula" value="<?php echo isset($options[$subkey . '_terra_cashoutlay_mb_formula']) ? $options[$subkey . '_terra_cashoutlay_mb_formula'] : 'B2-B15'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="E15" name="tf_tc_simple_options_lprrsp_taxsavings_mb" data-formula="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_mb_formula']) ? $options[$subkey . '_lprrsp_taxsavings_mb_formula'] : 'B15+(B3*B2*E7)-(B3*B2*0.5*E7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FE15" name="tf_tc_simple_options_lprrsp_taxsavings_mb_formula" value="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_mb_formula']) ? $options[$subkey . '_lprrsp_taxsavings_mb_formula'] : 'B15+(B3*B2*E7)-(B3*B2*0.5*E7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="F15" name="tf_tc_simple_options_lprrsp_cashoutlay_mb" data-formula="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_mb_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_mb_formula'] : 'B2-E15'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FF15" name="tf_tc_simple_options_lprrsp_cashoutlay_mb_formula" value="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_mb_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_mb_formula'] : 'B2-E15'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="H15" name="tf_tc_simple_options_lpdonation_taxsavings_mb" data-formula="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_mb_formula']) ? $options[$subkey . '_lpdonation_taxsavings_mb_formula'] : 'B15+(B3*B2*E8)-(B3*B2*0.5*E7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FH15" name="tf_tc_simple_options_lpdonation_taxsavings_mb_formula" value="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_mb_formula']) ? $options[$subkey . '_lpdonation_taxsavings_mb_formula'] : 'B15+(B3*B2*E8)-(B3*B2*0.5*E7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="I15" name="tf_tc_simple_options_lpdonation_cashoutlay_mb" data-formula="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_mb_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_mb_formula'] : 'B2-H15'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FI15" name="tf_tc_simple_options_lpdonation_cashoutlay_mb_formula" value="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_mb_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_mb_formula'] : 'B2-H15'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="K15" name="tf_tc_simple_options_lprrspcaploss_taxsavings_mb" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_mb_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_mb_formula'] : 'B15+(B3*B2*E7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FK15" name="tf_tc_simple_options_lprrspcaploss_taxsavings_mb_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_mb_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_mb_formula'] : 'B15+(B3*B2*E7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="L15" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_mb" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_mb_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_mb_formula'] : 'B2-K15'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FL15" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_mb_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_mb_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_mb_formula'] : 'B2-K15'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="N15" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_mb" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_mb_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_mb_formula'] : 'B15+(B3*B2*E8)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FN15" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_mb_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_mb_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_mb_formula'] : 'B15+(B3*B2*E8)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="O15" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_mb" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_mb_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_mb_formula'] : 'B2-N15'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FO15" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_mb_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_mb_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_mb_formula'] : 'B2-N15'; ?>"/>
+						</td>
+					</tr>
+					<tr>
+						<td>ON</td>
+						<td>
+							<input type="text" data-cell="B16" name="tf_tc_simple_options_terra_taxsavings_on" data-formula="<?php echo isset($options[$subkey . '_terra_taxsavings_on_formula']) ? $options[$subkey . '_terra_taxsavings_on_formula'] : 'B2*F7+B2*0.9*B5*B4*(1-F7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FB16" name="tf_tc_simple_options_terra_taxsavings_on_formula" value="<?php echo isset($options[$subkey . '_terra_taxsavings_on_formula']) ? $options[$subkey . '_terra_taxsavings_on_formula'] : 'B2*F7+B2*0.9*B5*B4*(1-F7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="C16" name="tf_tc_simple_options_terra_cashoutlay_on" data-formula="<?php echo isset($options[$subkey . '_terra_cashoutlay_on_formula']) ? $options[$subkey . '_terra_cashoutlay_on_formula'] : 'B2-B16'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FC16" name="tf_tc_simple_options_terra_cashoutlay_on_formula" value="<?php echo isset($options[$subkey . '_terra_cashoutlay_on_formula']) ? $options[$subkey . '_terra_cashoutlay_on_formula'] : 'B2-B16'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="E16" name="tf_tc_simple_options_lprrsp_taxsavings_on" data-formula="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_on_formula']) ? $options[$subkey . '_lprrsp_taxsavings_on_formula'] : 'B16+(B3*B2*F7)-(B3*B2*0.5*F7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FE16" name="tf_tc_simple_options_lprrsp_taxsavings_on_formula" value="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_on_formula']) ? $options[$subkey . '_lprrsp_taxsavings_on_formula'] : 'B16+(B3*B2*F7)-(B3*B2*0.5*F7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="F16" name="tf_tc_simple_options_lprrsp_cashoutlay_on" data-formula="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_on_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_on_formula'] : 'B2-E16'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FF16" name="tf_tc_simple_options_lprrsp_cashoutlay_on_formula" value="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_on_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_on_formula'] : 'B2-E16'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="H16" name="tf_tc_simple_options_lpdonation_taxsavings_on" data-formula="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_on_formula']) ? $options[$subkey . '_lpdonation_taxsavings_on_formula'] : 'B16+(B3*B2*F8)-(B3*B2*0.5*F7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FH16" name="tf_tc_simple_options_lpdonation_taxsavings_on_formula" value="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_on_formula']) ? $options[$subkey . '_lpdonation_taxsavings_on_formula'] : 'B16+(B3*B2*F8)-(B3*B2*0.5*F7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="I16" name="tf_tc_simple_options_lpdonation_cashoutlay_on" data-formula="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_on_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_on_formula'] : 'B2-H16'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FI16" name="tf_tc_simple_options_lpdonation_cashoutlay_on_formula" value="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_on_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_on_formula'] : 'B2-H16'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="K16" name="tf_tc_simple_options_lprrspcaploss_taxsavings_on" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_on_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_on_formula'] : 'B16+(B3*B2*F7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FK16" name="tf_tc_simple_options_lprrspcaploss_taxsavings_on_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_on_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_on_formula'] : 'B16+(B3*B2*F7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="L16" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_on" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_on_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_on_formula'] : 'B2-K16'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FL16" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_on_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_on_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_on_formula'] : 'B2-K16'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="N16" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_on" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_on_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_on_formula'] : 'B16+(B3*B2*F8)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FN16" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_on_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_on_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_on_formula'] : 'B16+(B3*B2*F8)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="O16" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_on" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_on_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_on_formula'] : 'B2-N16'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FO16" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_on_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_on_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_on_formula'] : 'B2-N16'; ?>"/>
+						</td>
+					</tr>
+					<tr>
+						<td>QC</td>
+						<td>
+							<input type="text" data-cell="B17" name="tf_tc_simple_options_terra_taxsavings_qc" data-formula="<?php echo isset($options[$subkey . '_terra_taxsavings_qc_formula']) ? $options[$subkey . '_terra_taxsavings_qc_formula'] : 'B2*G7+B2*0.9*B5*B4*(1-G7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FB17" name="tf_tc_simple_options_terra_taxsavings_qc_formula" value="<?php echo isset($options[$subkey . '_terra_taxsavings_qc_formula']) ? $options[$subkey . '_terra_taxsavings_qc_formula'] : 'B2*G7+B2*0.9*B5*B4*(1-G7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="C17" name="tf_tc_simple_options_terra_cashoutlay_qc" data-formula="<?php echo isset($options[$subkey . '_terra_cashoutlay_qc_formula']) ? $options[$subkey . '_terra_cashoutlay_qc_formula'] : 'B2-B17'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FC17" name="tf_tc_simple_options_terra_cashoutlay_qc_formula" value="<?php echo isset($options[$subkey . '_terra_cashoutlay_qc_formula']) ? $options[$subkey . '_terra_cashoutlay_qc_formula'] : 'B2-B17'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="E17" name="tf_tc_simple_options_lprrsp_taxsavings_qc" data-formula="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_qc_formula']) ? $options[$subkey . '_lprrsp_taxsavings_qc_formula'] : 'B17+(B3*B2*G7)-(B3*B2*0.5*G7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FE17" name="tf_tc_simple_options_lprrsp_taxsavings_qc_formula" value="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_qc_formula']) ? $options[$subkey . '_lprrsp_taxsavings_qc_formula'] : 'B17+(B3*B2*G7)-(B3*B2*0.5*G7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="F17" name="tf_tc_simple_options_lprrsp_cashoutlay_qc" data-formula="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_qc_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_qc_formula'] : 'B2-E17'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FF17" name="tf_tc_simple_options_lprrsp_cashoutlay_qc_formula" value="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_qc_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_qc_formula'] : 'B2-E17'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="H17" name="tf_tc_simple_options_lpdonation_taxsavings_qc" data-formula="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_qc_formula']) ? $options[$subkey . '_lpdonation_taxsavings_qc_formula'] : 'B17+(B3*B2*G8)-(B3*B2*0.5*G7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FH17" name="tf_tc_simple_options_lpdonation_taxsavings_qc_formula" value="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_qc_formula']) ? $options[$subkey . '_lpdonation_taxsavings_qc_formula'] : 'B17+(B3*B2*G8)-(B3*B2*0.5*G7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="I17" name="tf_tc_simple_options_lpdonation_cashoutlay_qc" data-formula="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_qc_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_qc_formula'] : 'B2-H17'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FI17" name="tf_tc_simple_options_lpdonation_cashoutlay_qc_formula" value="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_qc_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_qc_formula'] : 'B2-H17'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="K17" name="tf_tc_simple_options_lprrspcaploss_taxsavings_qc" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_qc_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_qc_formula'] : 'B17+(B3*B2*G7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FK17" name="tf_tc_simple_options_lprrspcaploss_taxsavings_qc_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_qc_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_qc_formula'] : 'B17+(B3*B2*G7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="L17" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_qc" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_qc_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_qc_formula'] : 'B2-K17'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FL17" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_qc_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_qc_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_qc_formula'] : 'B2-K17'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="N17" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_qc" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_qc_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_qc_formula'] : 'B17+(B3*B2*G8)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FN17" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_qc_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_qc_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_qc_formula'] : 'B17+(B3*B2*G8)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="O17" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_qc" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_qc_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_qc_formula'] : 'B2-N17'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FO17" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_qc_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_qc_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_qc_formula'] : 'B2-N17'; ?>"/>
+						</td>
+					</tr>
+					<tr>
+						<td>NS</td>
+						<td>
+							<input type="text" data-cell="B18" name="tf_tc_simple_options_terra_taxsavings_ns" data-formula="<?php echo isset($options[$subkey . '_terra_taxsavings_ns_formula']) ? $options[$subkey . '_terra_taxsavings_ns_formula'] : 'B2*H7+B2*0.9*B5*B4*(1-H7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FB18" name="tf_tc_simple_options_terra_taxsavings_ns_formula" value="<?php echo isset($options[$subkey . '_terra_taxsavings_ns_formula']) ? $options[$subkey . '_terra_taxsavings_ns_formula'] : 'B2*H7+B2*0.9*B5*B4*(1-H7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="C18" name="tf_tc_simple_options_terra_cashoutlay_ns" data-formula="<?php echo isset($options[$subkey . '_terra_cashoutlay_ns_formula']) ? $options[$subkey . '_terra_cashoutlay_ns_formula'] : 'B2-B18'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FC18" name="tf_tc_simple_options_terra_cashoutlay_ns_formula" value="<?php echo isset($options[$subkey . '_terra_cashoutlay_ns_formula']) ? $options[$subkey . '_terra_cashoutlay_ns_formula'] : 'B2-B18'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="E18" name="tf_tc_simple_options_lprrsp_taxsavings_ns" data-formula="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_ns_formula']) ? $options[$subkey . '_lprrsp_taxsavings_ns_formula'] : 'B18+(B3*B2*H7)-(B3*B2*0.5*H7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FE18" name="tf_tc_simple_options_lprrsp_taxsavings_ns_formula" value="<?php echo isset($options[$subkey . '_lprrsp_taxsavings_ns_formula']) ? $options[$subkey . '_lprrsp_taxsavings_ns_formula'] : 'B18+(B3*B2*H7)-(B3*B2*0.5*H7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="F18" name="tf_tc_simple_options_lprrsp_cashoutlay_ns" data-formula="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_ns_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_ns_formula'] : 'B2-E18'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FF18" name="tf_tc_simple_options_lprrsp_cashoutlay_ns_formula" value="<?php echo isset($options[$subkey . '_lprrsp_cashoutlay_ns_formula']) ? $options[$subkey . '_lprrsp_cashoutlay_ns_formula'] : 'B2-E18'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="H18" name="tf_tc_simple_options_lpdonation_taxsavings_ns" data-formula="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_ns_formula']) ? $options[$subkey . '_lpdonation_taxsavings_ns_formula'] : 'B18+(B3*B2*H8)-(B3*B2*0.5*H7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FH18" name="tf_tc_simple_options_lpdonation_taxsavings_ns_formula" value="<?php echo isset($options[$subkey . '_lpdonation_taxsavings_ns_formula']) ? $options[$subkey . '_lpdonation_taxsavings_ns_formula'] : 'B18+(B3*B2*H8)-(B3*B2*0.5*H7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="I18" name="tf_tc_simple_options_lpdonation_cashoutlay_ns" data-formula="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_ns_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_ns_formula'] : 'B2-H18'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FI18" name="tf_tc_simple_options_lpdonation_cashoutlay_ns_formula" value="<?php echo isset($options[$subkey . '_lpdonation_cashoutlay_ns_formula']) ? $options[$subkey . '_lpdonation_cashoutlay_ns_formula'] : 'B2-H18'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="K18" name="tf_tc_simple_options_lprrspcaploss_taxsavings_ns" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_ns_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_ns_formula'] : 'B18+(B3*B2*H7)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FK18" name="tf_tc_simple_options_lprrspcaploss_taxsavings_ns_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_taxsavings_ns_formula']) ? $options[$subkey . '_lprrspcaploss_taxsavings_ns_formula'] : 'B18+(B3*B2*H7)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="L18" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_ns" data-formula="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_ns_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_ns_formula'] : 'B2-K18'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FL18" name="tf_tc_simple_options_lprrspcaploss_cashoutlay_ns_formula" value="<?php echo isset($options[$subkey . '_lprrspcaploss_cashoutlay_ns_formula']) ? $options[$subkey . '_lprrspcaploss_cashoutlay_ns_formula'] : 'B2-K18'; ?>"/>
+						</td>
+						<td>
+						</td>
+						<td>
+							<input type="text" data-cell="N18" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_ns" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_ns_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_ns_formula'] : 'B18+(B3*B2*H8)'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FN18" name="tf_tc_simple_options_lpdonationcaploss_taxsavings_ns_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_taxsavings_ns_formula']) ? $options[$subkey . '_lpdonationcaploss_taxsavings_ns_formula'] : 'B18+(B3*B2*H8)'; ?>"/>
+						</td>
+						<td>
+							<input type="text" data-cell="O18" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_ns" data-formula="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_ns_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_ns_formula'] : 'B2-N18'; ?>" data-format="$0,0"/>
+							<br/>
+							<input type="text" data-cell="FO18" name="tf_tc_simple_options_lpdonationcaploss_cashoutlay_ns_formula" value="<?php echo isset($options[$subkey . '_lpdonationcaploss_cashoutlay_ns_formula']) ? $options[$subkey . '_lpdonationcaploss_cashoutlay_ns_formula'] : 'B2-N18'; ?>"/>
+						</td>
+					</tr>
+					</tbody>
+					</table> 
+
+					<?php submit_button(); ?>
+				</form>
+				<div id="simple-plugin-reset" style="clear: both;">
+				<form method="post" action="">
+					<?php wp_nonce_field('simple-plugin-reset', 'simple-plugin-reset-nonce'); ?>
+					<label style="font-weight:normal;">
+						<?php printf(__('Do you wish to <strong>completely reset</strong> the default options for', 'simple-plugin')); ?> <?php echo $this->sub_title ?>? </label>
+					<input class="button-primary" type="submit" name="simple_plugin_reset" value="Restore Defaults" />
+				</form>
+			</div>
+				
+		</div>
+		<?php 
+	}
 	
 	public function reset_options() {
 		delete_option( $this->key );

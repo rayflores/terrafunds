@@ -1,0 +1,240 @@
+Array
+(
+    [tf_tc_options_calculator_title] => Calculator Inputs
+    [tf_tc_options_slim_calculator_title] => Input Options
+    [tf_tc_options_results_title] => Summary of Tax Savings
+    [tf_tc_options_cash_outlay_bg] => #009900
+    [tf_tc_options_tax_savings_bg] => #424242
+    [tf_tc_options_chart_title_size] => 20
+    [tf_tc_options_chart_title_style] => normal
+    [tf_tc_options_chart_title_font] => Lato
+    [tf_tc_options_chart_title_color] => #f7690a
+    [tf_tc_options_tooltip_bg] => #888888
+    [tf_tc_options_step_1_label] => Your Province
+    [tf_tc_options_D8] => BC
+    [tf_tc_options_step_2_label] => Income (salary, bonuses)
+    [tf_tc_options_step_3_label] => Capital Gains
+    [tf_tc_options_step_4_label] => Deductions already acquired
+    [tf_tc_options_B17_formula] => 0.1
+    [tf_tc_options_step_5_label] => Reinvest, RRSP Transfer or Donate
+    [tf_tc_options_contribute_selection] => NO
+    [tf_tc_options_step_6_label] => Capital Losses available
+    [tf_tc_options_step_7_label] => FMV* of RRSP Transfer or Donation
+    [tf_tc_options_step_8_label] => Max % of taxable income to invest
+    [tf_tc_options_H26] => 202800
+    [tf_tc_options_L26] => 202801
+    [tf_tc_options_G28] => BC
+    [tf_tc_options_H28] => 0.29
+    [tf_tc_options_I28] => 0.147
+    [tf_tc_options_J28] => 0
+    [tf_tc_options_K28_formula] => H28+I28+J28
+    [tf_tc_options_L28] => 0.33
+    [tf_tc_options_M28] => 0.147
+    [tf_tc_options_N28] => 0
+    [tf_tc_options_O28_formula] => L28+M28+N28
+    [tf_tc_options_G29] => AB
+    [tf_tc_options_H29] => 0.29
+    [tf_tc_options_I29] => 0.21
+    [tf_tc_options_J29] => 0
+    [tf_tc_options_K29_formula] => H29+I29+J29
+    [tf_tc_options_L29] => 0.33
+    [tf_tc_options_M29] => 0.21
+    [tf_tc_options_N29] => 0
+    [tf_tc_options_O29_formula] => L29+M29+N29
+    [tf_tc_options_G30] => SK
+    [tf_tc_options_H30] => 0.29
+    [tf_tc_options_I30] => 0.1475
+    [tf_tc_options_J30] => 0
+    [tf_tc_options_K30_formula] => H30+I30+J30
+    [tf_tc_options_L30] => 0.33
+    [tf_tc_options_M30] => 0.1475
+    [tf_tc_options_N30] => 0
+    [tf_tc_options_O30_formula] => L30+M30+N30
+    [tf_tc_options_E33_formula] => D10
+    [tf_tc_options_G31] => MB
+    [tf_tc_options_H31] => 0.29
+    [tf_tc_options_I31] => 0.174
+    [tf_tc_options_J31] => 0
+    [tf_tc_options_K31_formula] => H31+I31+J31
+    [tf_tc_options_L31] => 0.33
+    [tf_tc_options_M31] => 0.174
+    [tf_tc_options_N31] => 0
+    [tf_tc_options_O31_formula] => L31+M31+N31
+    [tf_tc_options_E34_formula] => D12*(0.5)
+    [tf_tc_options_G32] => ON
+    [tf_tc_options_H32] => 0.29
+    [tf_tc_options_I32] => 0.1116
+    [tf_tc_options_J32] => 0.0625
+    [tf_tc_options_K32_formula] => H32+I32+J32
+    [tf_tc_options_L32] => 0.33
+    [tf_tc_options_M32] => 0.1116
+    [tf_tc_options_N32] => 0.0625
+    [tf_tc_options_O32_formula] => L32+M32+N32
+    [tf_tc_options_E35_formula] => D14*(-1)
+    [tf_tc_options_G33] => QC
+    [tf_tc_options_H33] => 0.2422
+    [tf_tc_options_I33] => 0.24
+    [tf_tc_options_J33] => 0
+    [tf_tc_options_K33_formula] => H33+I33+J33
+    [tf_tc_options_L33] => 0.2756
+    [tf_tc_options_M33] => 0.24
+    [tf_tc_options_N33] => 0
+    [tf_tc_options_O33_formula] => L33+M33+N33
+    [tf_tc_options_E36_formula] => E33+E34+E35
+    [tf_tc_options_G34] => NS
+    [tf_tc_options_H34] => 0.29
+    [tf_tc_options_I34] => 0.21
+    [tf_tc_options_J34] => 0
+    [tf_tc_options_K34_formula] => H34+I34+J34
+    [tf_tc_options_L34] => 0.33
+    [tf_tc_options_M34] => 0.21
+    [tf_tc_options_N34] => 0
+    [tf_tc_options_O34_formula] => L34+M34+N34
+    [tf_tc_options_J41_formula] => S73
+    [tf_tc_options_J42_formula] => S74
+    [tf_tc_options_F43_formula] => IF(S73+S74+S75+S76>=1000," ","Insufficient income")
+    [tf_tc_options_G43_formula] => IF(S73+S74+S75+S76>=5000," ","Insufficient income")
+    [tf_tc_options_J43_formula] => IF(D8="AB",S75+S76,IF(D8="ON",S75+S76,S75))
+    [tf_tc_options_C46_formula] => IF(F43="Insufficient income","Insufficient ","Minimum")
+    [tf_tc_options_D46_formula] => IF(G43="Insufficient income","Insufficient ","Alternate")
+    [tf_tc_options_E46_formula] => IF(I60=" "," ","Recommended")
+    [tf_tc_options_C47_formula] => IF(F43="Insufficient income"," Income","1000")
+    [tf_tc_options_D47_formula] => IF(G43="Insufficient income"," Income","5000")
+    [tf_tc_options_E47_formula] => IF(D48<5000," ",H61)
+    [tf_tc_options_C48_formula] => MAX(IF(S73+S74+S75+S76>=1000,1000,0))
+    [tf_tc_options_D48_formula] => MAX(IF(S73+S74+S75+S76>=5000,5000,0))
+    [tf_tc_options_E48_formula] => IF(G61<5000," ",IF(V77=0," ",V77))
+    [tf_tc_options_C49_formula] => IF(E36-C48>=M73,Q73,IF(E36-C48>=M74,Q74,IF(E36-C48>=M75,Q75,IF(D8="BC",0,IF(D8="SK",0,IF(D8="MB",0,IF(D8="QC",0,IF(D8="NS",0,(IF((OR(D8="AB",D8="ON")),IF(E36-C48>=M76,Q76,0)))))))))))
+    [tf_tc_options_D49_formula] => IF(E36-D48>=M73,Q73,IF(E36-D48>=M74,Q74,IF(E36-D48>=M75,Q75,IF(D8="BC",0,IF(D8="SK",0,IF(D8="MB",0,IF(D8="QC",0,IF(D8="NS",0,(IF((OR(D8="AB",D8="ON")),IF(E36-D48>=M76,Q76,0)))))))))))
+    [tf_tc_options_E49_formula] => IF(D48<5000," ",IF(H61=" "," ",Z77/H61))
+    [tf_tc_options_C50_formula] => IF(C47=" ","-",C48*C49)
+    [tf_tc_options_D50_formula] => IF(D47=" ","-",D48*D49)
+    [tf_tc_options_E50_formula] => IF(D48<5000," ",IF(H61=" "," ",Z77))
+    [tf_tc_options_C51_formula] => C48-C50
+    [tf_tc_options_D51_formula] => IF(G43="Insufficient income"," Income","5000")
+    [tf_tc_options_E51_formula] => IF(H61=" "," ",H61-H63)
+    [tf_tc_options_C52_formula] => IF(F43="Insufficient Income",0,C47*0.9*0.35*0.15*(1-C49))
+    [tf_tc_options_D52_formula] => IF(G43="Insufficient Income",0,D47*0.9*0.35*0.15*(1-D49))
+    [tf_tc_options_E52_formula] => IF(D48<5000," ",IF(E47=" "," ",E47*(0.9)*(0.35)*(0.15)*(1-E49)))
+    [tf_tc_options_B53_formula] => IF(D18="Reinvest","Reinvest",IF(D18="YES - Contribute to RRSP","RRSP savings",IF(D18="YES - Donate","Donation savings ", "Reinvest/RRSP/Donate ")))
+    [tf_tc_options_C53_formula] => IF(F43="Insufficient income","-",IF(D18="NO","-",IF(D18="YES - Contribute to RRSP",IF(F43="Insufficient income",0,1000*C49*D22),IF(AND(E36>=202801,D18="YES - Donate"),IF(D8="BC",1000*O28*D22,IF(D8="AB",1000*O29*D22,IF(D8="SK",1000*O30*D22,IF(D8="MB",1000*O31*D22,IF(D8="ON",1000*O32*D22,IF(D8="QC",1000*O33*D22,IF(D8="NS",1000*O34*D22))))))),IF(D8="BC",1000*K28*D22,IF(D8="AB",1000*K29*D22,IF(D8="SK",1000*K30*D22,IF(D8="MB",1000*K31*D22,IF(D8="ON",1000*K32*D22,IF(D8="QC",1000*K33*D22,IF(D8="NS",1000*K34*D22)))))))))))
+    [tf_tc_options_D53_formula] => IF(G43="Insufficient income","-",IF(D18="NO","-",IF(D18="YES - Contribute to RRSP",IF(G43="Insufficient income",0,5000*D49*D22),IF(AND(E36>=202801,D18="YES - Donate"),IF(D8="BC",5000*O28*D22,IF(D8="AB",5000*O29*D22,IF(D8="SK",5000*O30*D22,IF(D8="MB",5000*O31*D22,IF(D8="ON",5000*O32*D22,IF(D8="QC",5000*O33*D22,IF(D8="NS",5000*O34*D22))))))),IF(D8="BC",5000*K28*D22,IF(D8="AB",5000*K29*D22,IF(D8="SK",5000*K30*D22,IF(D8="MB",5000*K31*D22,IF(D8="ON",5000*K32*D22,IF(D8="QC",5000*K33*D22,IF(D8="NS",5000*K34*D22)))))))))))
+    [tf_tc_options_E53_formula] => IF(E36<=0," ",IF(G61<5000," ",IF(D18="NO","-",IF(D18="YES - Contribute to RRSP",IF(H59="Insufficient income",0,I60*H62*D22),IF(AND(E36>=202801,D18="YES - Donate"),IF(D8="BC",I60*O28*D22,IF(D8="AB",I60*O29*D22,IF(D8="SK",I60*O30*D22,IF(D8="MB",I60*O31*D22,IF(D8="ON",I60*O32*D22,IF(D8="QC",I60*O33*D22,IF(D8="NS",I60*O34*D22))))))),IF(D8="BC",I60*K28*D22,IF(D8="AB",I60*K29*D22,IF(D8="SK",I60*K30*D22,IF(D8="MB",I60*K31*D22,IF(D8="ON",I60*K32*D22,IF(D8="QC",I60*K33*D22,IF(D8="NS",I60*K34*D22))))))))))))
+    [tf_tc_options_B54_formula] => IF(D18="YES - Contribute to RRSP","CG Tax on transfer",IF(D18="YES - Donate","CG Tax on Donation", "        -"))
+    [tf_tc_options_C54_formula] => IF(D18="NO","-",IF(D20="YES",0,IF(D18="YES - Contribute to RRSP",IF(F43="Insufficient income","-",1000*D22*0.5*C49*-1),IF(D18="YES - Donate",IF(F43="Insufficient income","-",1000*D22*0.5*C49*-1),0))))
+    [tf_tc_options_D54_formula] => IF(D18="NO","-",IF(D20="YES",0,IF(D18="YES - Contribute to RRSP",IF(G43="Insufficient income","-",5000*D22*0.5*D49*-1),IF(D18="YES - Donate",IF(G43="Insufficient income","-",5000*D22*0.5*D49*-1),0))))
+    [tf_tc_options_E54_formula] => IF(E36<=0," ",IF(G61<5000," ",IF(D18="NO","-",IF(D18="NO"," ",IF(D20="YES",0,IF(D18="YES - Contribute to RRSP",IF(G61<5000," ",IF(H59="Insufficient income",0,I60*D22*0.5*H62*-1)),IF(D18="YES - Donate",IF(D48<5000," ",IF(H59="Insufficient income",0,I60*D22*0.5*H62*-1)),0)))))))
+    [tf_tc_options_C55_formula] => (IF((OR(C53="-",C54="-")),C50+C52,C50+C52+C53+C54))
+    [tf_tc_options_D55_formula] => (IF((OR(D53="-",D54="-")),D50+D52,D50+D52+D53+D54))
+    [tf_tc_options_E55_formula] => IF(E50=" "," ",(IF(OR(E53="-",E54>0),E50+E52,E50+E52+E53+E54)))
+    [tf_tc_options_G59_formula] => IF(S77>=10000," ","Insufficient income")
+    [tf_tc_options_H59_formula] => IF(G61<10000," ",IF(H61=" "," "," "))
+    [tf_tc_options_G60_formula] => IF(G59="Insufficient income",0,"Invest $10,000")
+    [tf_tc_options_H60_formula] => IF(I60=" "," ","Invest")
+    [tf_tc_options_I60_formula] => IF(G61<10000," ",H61)
+    [tf_tc_options_G61_formula] => MAX(IF(S73+S74+S75+S76>=10000,10000,0))
+    [tf_tc_options_H61_formula] => IF(G61<10000," ",IF(V77=0," ",V77))
+    [tf_tc_options_G62_formula] => IF(G59="Insufficient income",0,IF(E36-G61>=M73,Q73,IF(E36-G61>=M74,Q74,IF(E36-G61>=M75,Q75,IF(D8="BC",0,IF(D8="SK",0,IF(D8="MB",0,IF(D8="QC",0,IF(D8="NS",0,(IF((OR(D8="AB",D8="ON")),IF(E36-G61>=M76,Q76,0))))))))))))
+    [tf_tc_options_H62_formula] => IF(G61<10000," ",IF(H61=" "," ",Z77/H61))
+    [tf_tc_options_G63_formula] => G61*G62
+    [tf_tc_options_H63_formula] => IF(G61<10000," ",IF(H61=" "," ",Z77))
+    [tf_tc_options_G64_formula] => G61-G63
+    [tf_tc_options_H64_formula] => IF(H61=" "," ",H61-H63)
+    [tf_tc_options_B65_formula] => IF(D18="YES - Contribute to RRSP","Tax savings on transfer to RRSP",IF(D18="YES - Donate","Tax savings", "        -"))
+    [tf_tc_options_G65_formula] => IF(G59="Insufficient income","-",IF(D18="NO","-",IF(D18="YES - Contribute to RRSP",IF(G43="Insufficient income",0,10000*D49*D22),IF(AND(E36>=202801,D18="YES - Donate"),IF(D8="BC",10000*O28*D22,IF(D8="AB",10000*O29*D22,IF(D8="SK",10000*O30*D22,IF(D8="MB",10000*O31*D22,IF(D8="ON",10000*O32*D22,IF(D8="QC",10000*O33*D22,IF(D8="NS",10000*O34*D22))))))),IF(D8="BC",10000*K28*D22,IF(D8="AB",10000*K29*D22,IF(D8="SK",10000*K30*D22,IF(D8="MB",10000*K31*D22,IF(D8="ON",10000*K32*D22,IF(D8="QC",10000*K33*D22,IF(D8="NS",10000*K34*D22)))))))))))
+    [tf_tc_options_H65_formula] => IF(E36<=0," ",IF(G61<10000," ",IF(D18="NO","-",IF(D18="YES - Contribute to RRSP",IF(H59="Insufficient income",0,I60*H62*D22),IF(AND(E36>=202801,D18="YES - Donate"),IF(D8="BC",I60*O28*D22,IF(D8="AB",I60*O29*D22,IF(D8="SK",I60*O30*D22,IF(D8="MB",I60*O31*D22,IF(D8="ON",I60*O32*D22,IF(D8="QC",I60*O33*D22,IF(D8="NS",I60*O34*D22))))))),IF(D8="BC",I60*K28*D22,IF(D8="AB",I60*K29*D22,IF(D8="SK",I60*K30*D22,IF(D8="MB",I60*K31*D22,IF(D8="ON",I60*K32*D22,IF(D8="QC",I60*K33*D22,IF(D8="NS",I60*K34*D22))))))))))))
+    [tf_tc_options_B66_formula] => IF(D18="YES - Contribute to RRSP","Capital gains tax to RRSP",IF(D18="Yes - Donate","Capital gains tax", "        -"))
+    [tf_tc_options_G66_formula] => IF(D18="NO","-",IF(D20="YES",0,IF(D18="YES - Contribute to RRSP",IF(G59="Insufficient income","-",10000*D22*0.5*G62*-1),IF(D18="YES - Donate",IF(G59="Insufficient income","-",10000*D22*0.5*G62*-1),0))))
+    [tf_tc_options_H66_formula] => IF(E36<=0," ",IF(G61<10000," ",IF(D18="NO","-",IF(D18="NO"," ",IF(D20="YES",0,IF(D18="Yes - Contribute to RRSP",IF(G61<10000," ",IF(H59="Insufficient income",0,I60*D22*0.5*H62*-1)),IF(D18="Yes - Donate",IF(G61<10000," ",IF(H59="Insufficient income",0,I60*D22*0.5*H62*-1)),0)))))))
+    [tf_tc_options_G67_formula] => G61*G62
+    [tf_tc_options_H67_formula] => IF(G61<10000," ",IF(H61=" "," ",Z77))
+    [tf_tc_options_M73_formula] => IF(D8="AB",303901,IF(D8="BC",202801,IF(D8="SK",202801,IF(D8="MB",202801,IF(D8="ON",220001,IF(D8="QC",202801,IF(D8="NS",202801)))))))
+    [tf_tc_options_Q73_formula] => IF(D8="ON",0.5353,IF(D8="BC",0.477,IF(D8="AB",0.48,IF(D8="SK",0.4775,IF(D8="MB",0.504,IF(D8="QC",0.5331,IF(D8="NS",0.54)))))))
+    [tf_tc_options_S73_formula] => IF(E36 IF(AH73>=(E36*B17),E36*B17,AH73)
+    [tf_tc_options_X73_formula] => IF(AH73>=(E36*B17),E36*B17,AH73)
+    [tf_tc_options_Z73_formula] => V73*Q73
+    [tf_tc_options_AC73_formula] => S73*Q73
+    [tf_tc_options_AH73_formula] => S73
+    [tf_tc_options_M74_formula] => IF(D8="AB",202801,IF(D8="BC",142354,IF(D8="SK",142354,IF(D8="MB",142354,IF(D8="QC",142354,IF(D8="NS",150001,202801))))))
+    [tf_tc_options_O74_formula] => IF(D8="AB",303900,IF(D8="BC",202800,IF(D8="SK",202800,IF(D8="MB",202800,IF(D8="ON",220000,IF(D8="QC",202800,IF(D8="NS",202800,220000)))))))
+    [tf_tc_options_Q74_formula] => IF(D8="ON",0.5197,IF(D8="BC",0.437,IF(D8="AB",0.47,IF(D8="SK",0.4375,IF(D8="MB",0.464,IF(D8="QC",0.4997,IF(D8="NS",0.5)))))))
+    [tf_tc_options_S74_formula] => IF(E36M73,M73-M74)))
+    [tf_tc_options_V74_formula] => IF(AH74+V73>=(E36*B17),E36*B17-V73,AH74)
+    [tf_tc_options_X74_formula] => IF(E36>0,V74/E36,0)
+    [tf_tc_options_Z74_formula] => V74*Q74
+    [tf_tc_options_AC74_formula] => S74*Q74
+    [tf_tc_options_AH74_formula] => S74
+    [tf_tc_options_M75_formula] => IF(D8="BC",108461,IF(D8="AB",150001,IF(D8="ON",150001,IF(D8="SK",129215,IF(D8="MB",110000,IF(D8="QC",103915,IF(D8="NS",143252,202801)))))))
+    [tf_tc_options_O75_formula] => IF(D8="BC",142353,IF(D8="SK",142353,IF(D8="MB",142353,IF(D8="QC",142353,IF(D8="NS",150000,202800)))))
+    [tf_tc_options_Q75_formula] => IF(D8="ON",0.4797,IF(D8="BC",0.407,IF(D8="AB",0.42,IF(D8="SK",0.4075,IF(D8="MB",0.434,IF(D8="QC",0.4746,IF(D8="NS",0.465)))))))
+    [tf_tc_options_S75_formula] => IF(E36M74,M74-M75)))
+    [tf_tc_options_V75_formula] => IF(AH75+V74+V73>=(E36*B17),E36*B17-V74-V73,AH75)
+    [tf_tc_options_X75_formula] => IF(E36>0,V75/E36,0)
+    [tf_tc_options_Z75_formula] => V75*Q75
+    [tf_tc_options_AC75_formula] => S75*Q75
+    [tf_tc_options_AH75_formula] => S75
+    [tf_tc_options_M76_formula] => IF(D8="AB",142354,IF(D8="ON",142354,0))
+    [tf_tc_options_O76_formula] => IF(D8="AB",150000,IF(D8="ON",150000,0))
+    [tf_tc_options_Q76_formula] => IF(D8="AB",0.41,IF(D8="ON",0.4641," "))
+    [tf_tc_options_S76_formula] => IF(D8="BC",0,IF(D8="SK",0,IF(D8="MB",0,IF(D8="QC",0,IF(D8="NS",0,IF(E36M75,M75-M76))))))))
+    [tf_tc_options_V76_formula] => IF((AH76+V75+V74+V73)>=(E36*B17),E36*B17-V75-V74-V73,AH76)
+    [tf_tc_options_X76_formula] => IF((AH76+V75+V74+V73)>=(E36*B17),E36*B17-V75-V74-V73,AH76)
+    [tf_tc_options_Z76_formula] => IF(Q76=" ",0,V76*Q76)
+    [tf_tc_options_AC76_formula] => IF(D8="BC",0,IF(D8="SK",0,IF(D8="MB",0,IF(D8="QC",0,IF(D8="NS",0,S76*Q76)))))
+    [tf_tc_options_AH76_formula] => S76
+    [tf_tc_options_S77_formula] => S73+S74+S75+S76
+    [tf_tc_options_V77_formula] => V73+V74+V75+V76
+    [tf_tc_options_X77_formula] => X73+X74+X75+X76
+    [tf_tc_options_Z77_formula] => Z73+Z74+Z75+Z76
+    [tf_tc_options_AC77_formula] => AC73+AC74+AC75+AC76
+    [tf_tc_options_AH77_formula] => AH73+AH74+AH75+AH76
+    [tf_tc_options_M81_formula] => E36
+    [tf_tc_options_T81_formula] => E36
+    [tf_tc_options_AA81_formula] => E36
+    [tf_tc_options_AK81_formula] => E36
+    [tf_tc_options_M82_formula] => M73*(-1)
+    [tf_tc_options_T82_formula] => M73*(-1)
+    [tf_tc_options_AA82_formula] => M73*(-1)
+    [tf_tc_options_AK82_formula] => M73*(-1)
+    [tf_tc_options_M83_formula] => IF(M81 IF(T81 IF(AA81 IF(AK81 IF(M83<=0,0,Q73)
+    [tf_tc_options_T84_formula] => IF(T83<=0,0,Q73)
+    [tf_tc_options_AA84_formula] => IF(AA83<=0,0,Q73)
+    [tf_tc_options_AK84_formula] => IF(AK83<=0,0,Q73)
+    [tf_tc_options_M85_formula] => M83*M84
+    [tf_tc_options_T85_formula] => T83*T84
+    [tf_tc_options_AA85_formula] => AA83*AA84
+    [tf_tc_options_AK85_formula] => AK83*AK84
+    [tf_tc_options_T87_formula] => IF(T81M73,T82*(-1)-M74)))
+    [tf_tc_options_AA87_formula] => IF(AA81M73,M73-M74)))
+    [tf_tc_options_AK87_formula] => IF(AK81M73,M73-M74)))
+    [tf_tc_options_T88_formula] => IF(T87<=0,0,Q74)
+    [tf_tc_options_AA88_formula] => IF(AA87<=0,0,Q74)
+    [tf_tc_options_AK88_formula] => IF(AK87<=0,0,Q74)
+    [tf_tc_options_T89_formula] => T87*T88
+    [tf_tc_options_AA89_formula] => AA87*AA88
+    [tf_tc_options_AK89_formula] => AK87*AK88
+    [tf_tc_options_AA91_formula] => IF(AA81M74,M74-M75)))
+    [tf_tc_options_AK91_formula] => IF(AK81M74,M74-M75)))
+    [tf_tc_options_AA92_formula] => IF(AA91<=0,0,Q75)
+    [tf_tc_options_AK92_formula] => IF(AK91<=0,0,Q75)
+    [tf_tc_options_AA93_formula] => AA91*AA92
+    [tf_tc_options_AK93_formula] => AK91*AK92
+    [tf_tc_options_AA95_formula] => IF(AA81M75,M75-M76)))
+    [tf_tc_options_AK95_formula] => IF(AK81M75,M75-M76)))
+    [tf_tc_options_AA96_formula] => IF(AA95<=0,0,IF(Q76=" ",0," "))
+    [tf_tc_options_AK96_formula] => IF(AK95<=0,0,IF(Q76=" ",0," "))
+    [tf_tc_options_AA97_formula] => AA95*AA96
+    [tf_tc_options_AK97_formula] => AK95*AK96
+    [tf_tc_options_M99_formula] => M85
+    [tf_tc_options_T99_formula] => T85+T89
+    [tf_tc_options_AA99_formula] => AA85+AA89+AA93
+    [tf_tc_options_AK99_formula] => AK85+AK8+AK93+AK97
+    [tf_tc_options_M100_formula] => IF(M99<=0,0,M99/M101)
+    [tf_tc_options_T100_formula] => IF(T99<=0,0,T99/T101)
+    [tf_tc_options_AA100_formula] => IF(AA99<=0,0,AA99/AA101)
+    [tf_tc_options_AK100_formula] => IF(AK99<=0,0,AK99/AK101)
+    [tf_tc_options_M101_formula] => M83
+    [tf_tc_options_T101_formula] => T83+T87
+    [tf_tc_options_AA101_formula] => AA83+AA87+AA91
+    [tf_tc_options_AK101_formula] => AK83+AK87+AK91+AK95
+)
