@@ -111,6 +111,13 @@ jQuery(document).ready(function($){
 						gradientgreen.addColorStop(0,"#75D279");
 						gradientgreen.addColorStop(1,cash_bg);
 						ctxone.fillStyle = gradientgreen;
+				var chartwidth = 350;		
+				if ($(window).width() < 321 ){
+					chartwidth = 290;
+					$('#tfChartOne').css({'margin-left':'-15px'});
+				}
+				ctxone.canvas.width = chartwidth;
+				ctxone.canvas.height = chartwidth;		
 				var tfChartOne = new Chart(ctxone, {
 					type:"pie",
 					data:{
@@ -183,8 +190,9 @@ jQuery(document).ready(function($){
 					tfChartOne.data.datasets[0].data[1] = 0;
 					tfChartOne.options.showAllTooltips = false;
 					tfChartOne.options.title.display = false;
-				}	
-				tfChartOne.update();
+				}
+					tfChartOne.update();
+
 			}
 			$(document).on('change','.d10, .d12, .d14, .d22', function(e){
 				addData();
@@ -276,8 +284,10 @@ jQuery(document).ready(function($){
 					tfChartTwo.data.datasets[0].data[1] = 0;
 					tfChartTwo.options.showAllTooltips = false;
 					tfChartTwo.options.title.display = false;
-				}	
-				tfChartTwo.update();
+				}
+			
+					tfChartTwo.update();
+
 			}
 			$(document).on('change','.d10, .d12, .d14, .d22', function(e){
 				addData2();
@@ -316,6 +326,13 @@ jQuery(document).ready(function($){
 						gradientgreen.addColorStop(0,"#75D279");
 						gradientgreen.addColorStop(1,cash_bg);
 						ctxthree.fillStyle = gradientgreen;
+				var chartwidth = 350;		
+				if ($(window).width() < 321 ){
+					chartwidth = 290;
+					$('#tfChartThree').css({'margin-left':'-23px'});
+				}
+				ctxthree.canvas.width = chartwidth;
+				ctxthree.canvas.height = chartwidth;
 				var tfChartThree = new Chart(ctxthree, {
 					type:"pie",
 					data:{
@@ -341,7 +358,7 @@ jQuery(document).ready(function($){
 							fontStyle: title_style,
 							padding: 10,
 							fontSize: title_size,
-							text: 'Recommended Investment: ' + investment,
+							text: 'Investment: ' + investment,
 						},
 						responsive: false,
 						showAllTooltips: true,
@@ -365,6 +382,8 @@ jQuery(document).ready(function($){
 					}
 					
 				});
+				
+
 				
 			}
 			function addData3(){
@@ -397,7 +416,9 @@ jQuery(document).ready(function($){
 					tfChartThree.options.title.display = false;
 					tfChartThree.options.title.text = 'Recommended Investment: ' + investment;
 				}	
-				tfChartThree.update();
+				
+					tfChartThree.update();
+
 			}
 			$(document).on('change','.d10, .d12, .d14, .d22', function(e){
 				addData3();

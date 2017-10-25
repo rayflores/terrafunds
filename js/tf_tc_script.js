@@ -268,6 +268,9 @@ jQuery(document).ready(function($){
 		iOS: function() {
 			return navigator.userAgent.match(/iPhone|iPad|iPod/i);
 		},
+		iPad: function() {
+			return navigator.userAgent.match(/iPad/i);
+		},
 		Opera: function() {
 			return navigator.userAgent.match(/Opera Mini/i);
 		},
@@ -282,11 +285,23 @@ jQuery(document).ready(function($){
 	/* end Mobile Detection */	
 
 	if ( isMobile.any() ){
+		$('body').addClass('mobility');
 		//simple
 		$('table.tf-tc-results-simple').insertAfter($('canvas#tfChartOne'));
 		// main
-		$('canvas#tfChartThree').css('width','300');
-		$('canvas#tfChartThree').css('height','300');
+		$('#tfChartThree').css({'width': $(window).width()+'px'});
+		$('canvas').height($(window).width());
 	}
-		
+	if ( isMobile.iPad() ){
+		//simple
+		$('table.tf-tc-results-simple').insertAfter($('.chart-single-simple'));
+	}
+	$(window).resize( function() {
+		$('table.tf-tc-results-simple').insertAfter($('.chart-single-simple'));
+		if ( $(window).width() < 784 ) {
+			$('table.tf-tc-results-simple').insertAfter($('canvas#tfChartOne'));
+		} else {
+			$('table.tf-tc-results-simple').insertAfter($('.chart-single-simple'));
+		}
+	});
 });

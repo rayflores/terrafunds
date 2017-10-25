@@ -86,7 +86,7 @@ class TF_Tax_Calc {
 		?>
 		<div class="tf_calc_main">
 		<form class="tf-form">
-			<table class="table-responsive tf_calc_table col-md-6 col-sm-6">
+			<table class="table-responsive tf_calc_table col-md-6 col-sm-12">
 			<tfoot>
 				<tr>
 				  <td colspan="2" class="footer">
@@ -117,13 +117,13 @@ class TF_Tax_Calc {
 							</select> -->
 							<div class="tf-slider">
 								<div class="tf-ticks">
-									<span class="tick">BC</span>
-									<span class="tick" style="left:17.6667%;">AB</span>
-									<span class="tick" style="left:34.3333%;">SK</span>
-									<span class="tick" style="left:50%;">MB</span>
-									<span class="tick" style="left:66.6667%;">ON</span>
-									<span class="tick" style="left:83.3337%;">QC</span>
-									<span class="tick" style="left:100%;">NS</span>
+									<span class="tick bc">BC</span>
+									<span class="tick ab" style="left:16.5%;">AB</span>
+									<span class="tick sk" style="left:33.33%;">SK</span>
+									<span class="tick mb" style="left:49.5%;">MB</span>
+									<span class="tick on" style="left:66%;">ON</span>
+									<span class="tick qc" style="left:82.5%;">QC</span>
+									<span class="tick ns" style="left:100%;">NS</span>
 								</div>
 								<div id="tf-slider-1"></div>
 							</div>
@@ -261,7 +261,7 @@ class TF_Tax_Calc {
 				</tbody>
 			</table>
 
-			<div class="chart-single col-md-6 col-sm-6" style="">
+			<div class="chart-single col-md-6 col-sm-12" style="">
 				<canvas id="tfChartThree" width="350" height="350" style="display:inline-block;"></canvas>
 			</div>
 
@@ -607,7 +607,7 @@ class TF_Tax_Calc {
 			  </tfoot>
 				<tbody>
 					<tr>
-						<td colspan="2"class="h2 size-color medium"><?php echo isset($options['tf_tc_options_calculator_title']) ? $options['tf_tc_options_calculator_title'] : 'Calculator Inputs'; ?></td>
+						<td colspan="2"class="h2 size-color medium smedium"><?php echo isset($options['tf_tc_options_calculator_title']) ? $options['tf_tc_options_calculator_title'] : 'Calculator Inputs'; ?></td>
 					</tr>
 					<tr>
 						<td colspan="2">&nbsp;</td>
@@ -629,13 +629,13 @@ class TF_Tax_Calc {
 							</select> -->
 							<div class="tf-slider">
 								<div class="tf-ticks">
-									<span class="tick light">BC</span>
-									<span class="tick light" style="left:17.6667%;">AB</span>
-									<span class="tick light" style="left:34.3333%;">SK</span>
-									<span class="tick light" style="left:50%;">MB</span>
-									<span class="tick light" style="left:66.6667%;">ON</span>
-									<span class="tick light" style="left:83.3337%;">QC</span>
-									<span class="tick light" style="left:100%;">NS</span>
+									<span class="tick light bc">BC</span>
+									<span class="tick light ab" style="left:16%;">AB</span>
+									<span class="tick light sk" style="left:33%;">SK</span>
+									<span class="tick light mb" style="left:49%;">MB</span>
+									<span class="tick light on" style="left:65.6667%;">ON</span>
+									<span class="tick light qc" style="left:82.3337%;">QC</span>
+									<span class="tick light ns" style="left:100%;">NS</span>
 								</div>
 								<div id="tf-slider-1"></div>
 							</div>
@@ -735,17 +735,13 @@ class TF_Tax_Calc {
 			<table class="tf-tc-results-simple table-responsive">
 				<tbody>
 					<tr>
-						<td colspan="2" class="h2 size-color simple-title medium">
+						<td colspan="2" class="h2 size-color simple-title medium smedium">
 							<?php echo isset($options['tf_tc_options_results_title']) ? $options['tf_tc_options_results_title'] : 'Summary of Tax Savings'; ?>
 						</td>
 					</tr>
 					<tr>
 						<td colspan="2">&nbsp;</td>
 					</tr>
-					<tr>
-						<td colspan="2">&nbsp;</td>
-					</tr>
-					
 					<tr>
 						<td class="noPad first sBold">Investment</td>
 						<td class="text-center noPad second"><label class="C47 sBold" data-cell="C47" data-formula='<?php echo $options['tf_tc_options_C47_formula']; ?>' data-format="$0,0"></label></td>
@@ -783,7 +779,7 @@ class TF_Tax_Calc {
 						<td class="lPad"><div class="tax-content"><hr class="sep"/></div></td>
 					</tr>
 			-->		<tr class="topBorder">
-						<td class="first light"><label data-cell="B53" data-formula='<?php echo $options['tf_tc_options_B53_formula']; ?>'></label></td>
+						<td class="first light"><label class="light" data-cell="B53" data-formula='<?php echo $options['tf_tc_options_B53_formula']; ?>'></label></td>
 						<td class="text-center second"><label data-cell="C53" data-formula='<?php echo $options['tf_tc_options_C53_formula']; ?>' data-format="$0,0" class="nBold light"></label></td>
 						
 					</tr>
